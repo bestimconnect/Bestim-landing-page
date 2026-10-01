@@ -1,5 +1,6 @@
-import { Disc3, Droplet, UserRound, Wind } from "lucide-react";
-import { Bar, CountUp, Reveal } from "@/components/Motion";
+import { Check, Disc3, Droplet, UserRound, Wind } from "lucide-react";
+import Image from "next/image";
+import { Bar, CountUp, Parallax, Reveal } from "@/components/Motion";
 import { Phone } from "@/components/Phone";
 import { screen } from "@/screens";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -80,13 +81,31 @@ export function Bento({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           {/* Vehicles + share: a phone peeking from the bottom of the card */}
           {(["vehicles", "share"] as const).map((key, i) => (
             <Reveal key={key} delay={i * 0.08} className="md:col-span-2">
-              <div className={`${card} flex flex-col p-7 pb-0`}>
+              <div className={`${card} relative flex flex-col p-7 pb-0`}>
                 <h3 className="text-2xl font-semibold">{t[key].title}</h3>
                 <p className="mt-2 leading-7 text-muted">{t[key].body}</p>
-                <div className="mt-7 h-64 overflow-hidden">
+                {/* The phone sits on the card's bottom edge and is cut off by the card's own rounded corners. */}
+                <div className="mt-auto h-72 pt-7">
                   {/* "vehicles" shows the home screen: the vehicle dashboard is already the hero. */}
                   <Phone src={screen(lang, key === "vehicles" ? "home" : key)} alt={t[key].alt} className="mx-auto w-60" />
                 </div>
+                {key === "share" && (
+                  <Parallax distance={-14} className="absolute end-4 bottom-5">
+                    {/* Same look as the hero's floating cards. The QR code is real: it opens bestim-eg.com. */}
+                    <div className="flex items-center gap-3 rounded-metric bg-white p-2.5 pe-5 text-start shadow-float">
+                      <span className="relative shrink-0 rounded-field bg-mint p-1.5">
+                        <Image src="/brand/qr.svg" alt="" width={56} height={56} unoptimized className="size-14" />
+                        <span className="absolute -end-1.5 -top-1.5 grid size-5 place-items-center rounded-full bg-lime ring-2 ring-white">
+                          <Check className="size-3" strokeWidth={3} />
+                        </span>
+                      </span>
+                      <span>
+                        <span className="block text-sm font-semibold">{t.share.scanTitle}</span>
+                        <span className="block text-xs text-muted">{t.share.scanSub}</span>
+                      </span>
+                    </div>
+                  </Parallax>
+                )}
               </div>
             </Reveal>
           ))}

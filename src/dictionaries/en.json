@@ -129,7 +129,9 @@
     "share": {
       "title": "Share it by QR code",
       "body": "The buyer scans the code and receives a copy of the car's history.",
-      "alt": "The share vehicle history screen"
+      "alt": "The share vehicle history screen",
+      "scanTitle": "Scan to receive the history",
+      "scanSub": "Valid for 7 days"
     },
     "guest": {
       "title": "Try before you sign up",
