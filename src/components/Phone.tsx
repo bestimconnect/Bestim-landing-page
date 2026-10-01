@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import type { ReactNode } from "react";
 
 // A real iPhone 16 Pro frame (public/device/iphone-16-pro.png, Apple's product
@@ -13,7 +13,7 @@ export function Phone({
   priority,
   children,
 }: {
-  src?: string;
+  src?: StaticImageData;
   alt?: string;
   className?: string;
   priority?: boolean;
@@ -47,5 +47,3 @@ export function Phone({
     </div>
   );
 }
-
-export const screen = (lang: string, name: string) => `/screens/${lang}/${name}.png`;

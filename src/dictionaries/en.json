@@ -21,7 +21,7 @@
     "title1": "Log maintenance by voice.",
     "title2": "Keep a history you can trust.",
     "body": "Every service saved, every reminder on time, every expense in one place. Ready to share when you sell.",
-    "phoneAlt": "The Bestim app home screen",
+    "phoneAlt": "The Bestim app turning a spoken sentence into a maintenance record",
     "reminderTitle": "Oil change approaching",
     "reminderSub": "450 km left",
     "savedTitle": "Record saved",
@@ -113,11 +113,11 @@
         },
         {
           "name": "Engine oil",
-          "sub": "450 km or 12 days left"
+          "sub": "450 km left"
         },
         {
           "name": "Air filter",
-          "sub": "1,200 km left"
+          "sub": "900 km left"
         }
       ]
     },

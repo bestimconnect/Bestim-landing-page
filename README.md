@@ -21,13 +21,13 @@ npm run build    # every page is built ahead of time, in both languages
 | Site address, store links, Connect link, support email | `src/lib/site.ts` |
 | Home page sections, top to bottom | `src/app/[lang]/page.tsx` → `src/components/sections/` |
 | Brand colors, corner sizes, fonts | `src/app/globals.css` (copied from `../assets/brand/tokens.json`) |
-| Phone screenshots | `public/screens/ar/` and `public/screens/en/` |
+| Phone screenshots (real captures from the iPhone 16 simulator) | `src/screens/ar/` and `src/screens/en/` |
 | Logos | `public/brand/` |
 | Phone frame (real iPhone 16 Pro, Natural Titanium: Apple's product bezel via github.com/jonnyjackson26/device-frames-media) | `public/device/iphone-16-pro.png`, used by `src/components/Phone.tsx` |
 
 ## Common changes
 - **The app is live in a store:** put its link in `appStoreUrl` / `playStoreUrl` in `src/lib/site.ts`. The "Coming soon" label goes away and the button becomes a link.
-- **Replace a phone screenshot:** drop a PNG with the same name into `public/screens/ar/` and `public/screens/en/` (portrait, same shape as an iPhone screen).
+- **Replace a phone screenshot:** drop a PNG with the same name into `src/screens/ar/` and `src/screens/en/` (a full iPhone screenshot). Demo data for the captures: `bestim-app/supabase/seeds/demo_landing.sql`.
 - **Change wording:** edit both dictionary files, then `npm run check`.
 
 ## How it is built
@@ -36,7 +36,6 @@ Next.js 16 (App Router) + TypeScript + Tailwind v4, hosted on Vercel. Pages are 
 Next.js changes between major versions: read `AGENTS.md` before writing code.
 
 ## Still to do
-- Real app screenshots from the simulator (the current ones are low-resolution Figma exports).
 - The official Bestim Connect logo file (the Connect section draws it with CSS for now).
 - Social share image, structured data, Lighthouse pass.
 - Vercel project + `bestim-eg.com` DNS.

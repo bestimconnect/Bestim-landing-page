@@ -3,12 +3,13 @@
 import { useMotionValueEvent, useScroll } from "motion/react";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { Phone, screen } from "@/components/Phone";
+import { Phone } from "@/components/Phone";
+import { screen } from "@/screens";
 import { SectionHeading } from "@/components/SectionHeading";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 // Same order as dict.how.steps.
-const shots = ["voice", "review", "reminders"];
+const shots = ["voice", "review", "reminders"] as const;
 
 // The section is three screens tall. Its content stays pinned while you scroll
 // through it, and the scroll position picks which of the three steps is active.

@@ -1,7 +1,8 @@
 import { Check, Droplet, Mic, TrendingUp } from "lucide-react";
 import type { ReactNode } from "react";
 import { Parallax } from "@/components/Motion";
-import { Phone, screen } from "@/components/Phone";
+import { Phone } from "@/components/Phone";
+import { screen } from "@/screens";
 import { StoreBadges } from "@/components/StoreBadges";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
@@ -54,7 +55,7 @@ export function Hero({ lang, dict }: { lang: Locale; dict: Dictionary }) {
 
       <div className="relative mx-auto mt-12 w-fit">
         <Phone
-          src={screen(lang, "home")}
+          src={screen(lang, "review")}
           alt={t.phoneAlt}
           priority
           className="w-72 animate-rise [animation-delay:150ms] md:w-[22rem]"

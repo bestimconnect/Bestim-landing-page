@@ -1,12 +1,13 @@
 import { Disc3, Droplet, UserRound, Wind } from "lucide-react";
 import { Bar, CountUp, Reveal } from "@/components/Motion";
-import { Phone, screen } from "@/components/Phone";
+import { Phone } from "@/components/Phone";
+import { screen } from "@/screens";
 import { SectionHeading } from "@/components/SectionHeading";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
 const card = "h-full overflow-hidden rounded-nav border border-line/70 bg-white shadow-card";
 
-// Demo chart: months 04..09, like the app's expenses screen.
+// Demo chart: months 04..09, the same demo data as the app screenshots.
 const bars = [38, 58, 86, 48, 68, 100];
 // Same order as dict.bento.reminders.items.
 const reminderLooks = [
@@ -33,7 +34,7 @@ export function Bento({ lang, dict }: { lang: Locale; dict: Dictionary }) {
                 <p className="mt-2 leading-7 text-muted">{t.expenses.body}</p>
                 <div className="mt-7 rounded-metric bg-ink p-5 text-paper">
                   <p className="text-sm text-paper/70">{t.expenses.totalLabel}</p>
-                  <CountUp to={38400} className="mt-1 block text-4xl font-bold" />
+                  <CountUp to={52380} className="mt-1 block text-4xl font-bold" />
                   <p className="mt-1 text-sm text-paper/70">{t.expenses.currency}</p>
                 </div>
               </div>

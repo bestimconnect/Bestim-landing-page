@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Parallax, Reveal } from "@/components/Motion";
-import { Phone, screen } from "@/components/Phone";
+import { Phone } from "@/components/Phone";
+import { screen } from "@/screens";
 import { StoreBadges } from "@/components/StoreBadges";
 import type { Dictionary, Locale } from "@/lib/i18n";
 

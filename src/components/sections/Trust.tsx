@@ -1,6 +1,7 @@
 import { Check, QrCode } from "lucide-react";
 import { Parallax, Reveal } from "@/components/Motion";
-import { Phone, screen } from "@/components/Phone";
+import { Phone } from "@/components/Phone";
+import { screen } from "@/screens";
 import { SectionHeading } from "@/components/SectionHeading";
 import type { Dictionary, Locale } from "@/lib/i18n";
 
