@@ -84,7 +84,8 @@ export function Bento({ lang, dict }: { lang: Locale; dict: Dictionary }) {
                 <h3 className="text-2xl font-semibold">{t[key].title}</h3>
                 <p className="mt-2 leading-7 text-muted">{t[key].body}</p>
                 <div className="mt-7 h-64 overflow-hidden">
-                  <Phone src={screen(lang, key)} alt={t[key].alt} className="mx-auto w-60" />
+                  {/* "vehicles" shows the home screen: the vehicle dashboard is already the hero. */}
+                  <Phone src={screen(lang, key === "vehicles" ? "home" : key)} alt={t[key].alt} className="mx-auto w-60" />
                 </div>
               </div>
             </Reveal>

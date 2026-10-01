@@ -21,7 +21,7 @@
     "title1": "Log maintenance by voice.",
     "title2": "Keep a history you can trust.",
     "body": "Every service saved, every reminder on time, every expense in one place. Ready to share when you sell.",
-    "phoneAlt": "The Bestim app turning a spoken sentence into a maintenance record",
+    "phoneAlt": "A vehicle in the Bestim app: odometer, this year's expenses and the parts that need attention",
     "reminderTitle": "Oil change approaching",
     "reminderSub": "450 km left",
     "savedTitle": "Record saved",
@@ -124,7 +124,7 @@
     "vehicles": {
       "title": "All your vehicles, one account",
       "body": "Car, motorcycle, pickup or equipment. By kilometers or by operating hours.",
-      "alt": "The vehicle details screen"
+      "alt": "The Bestim app home screen"
     },
     "share": {
       "title": "Share it by QR code",
