@@ -31,37 +31,37 @@ function FloatCard({
 export function Hero({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   const t = dict.hero;
   return (
-    <section className="relative overflow-clip px-4 pt-36 pb-20 md:pt-44">
+    <section className="relative overflow-clip px-4 pt-28 pb-20 md:pt-32">
       {/* Soft brand glow behind the phone */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-72 -z-10 mx-auto h-[760px] max-w-5xl rounded-full bg-[radial-gradient(closest-side,rgb(211_245_61/0.6),rgb(8_115_111/0.12)_62%,transparent)] blur-2xl"
+        className="pointer-events-none absolute inset-x-0 top-52 -z-10 mx-auto h-[760px] max-w-5xl rounded-full bg-[radial-gradient(closest-side,rgb(211_245_61/0.6),rgb(8_115_111/0.12)_62%,transparent)] blur-2xl"
       />
 
       {/* The hero enters with a CSS animation (not Reveal) so it shows before any JavaScript loads. */}
-      <div className="mx-auto max-w-4xl animate-rise text-center">
+      <div className="mx-auto max-w-5xl animate-rise text-center">
         <p className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white px-4 py-1.5 text-sm text-muted">
           <span className="size-2 rounded-full bg-teal ring-4 ring-teal/15" />
           {t.eyebrow}
         </p>
-        <h1 className="mt-6 text-balance text-[2.5rem] leading-[1.2] font-bold md:text-6xl md:leading-[1.18]">
+        <h1 className="mt-5 text-balance text-[2.25rem] leading-[1.2] font-bold md:text-[3.5rem] md:leading-[1.18]">
           <span className="block">{t.title1}</span>
           <span className="block text-muted/55">{t.title2}</span>
         </h1>
-        <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted">{t.body}</p>
-        <StoreBadges dict={dict} className="mt-10 justify-center" />
+        <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-muted">{t.body}</p>
+        <StoreBadges dict={dict} className="mt-8 justify-center" />
       </div>
 
-      <div className="relative mx-auto mt-16 w-fit">
+      <div className="relative mx-auto mt-12 w-fit">
         <Phone
           src={screen(lang, "home")}
           alt={t.phoneAlt}
           priority
-          className="w-64 animate-rise [animation-delay:150ms] md:w-80"
+          className="w-72 animate-rise [animation-delay:150ms] md:w-[22rem]"
         />
 
         {/* Floating cards: positions use start/end, so they mirror in Arabic. */}
-        <Parallax distance={-50} className="absolute -top-7 -start-6 scale-90 md:top-24 md:-start-56 md:scale-100">
+        <Parallax distance={-50} className="absolute top-8 -start-6 scale-90 md:top-24 md:-start-56 md:scale-100">
           <FloatCard
             tint="bg-amber"
             icon={<Droplet className="size-5 text-ink" />}

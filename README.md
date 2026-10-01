@@ -23,6 +23,7 @@ npm run build    # every page is built ahead of time, in both languages
 | Brand colors, corner sizes, fonts | `src/app/globals.css` (copied from `../assets/brand/tokens.json`) |
 | Phone screenshots | `public/screens/ar/` and `public/screens/en/` |
 | Logos | `public/brand/` |
+| Phone frame (real iPhone 16 Pro, Natural Titanium: Apple's product bezel via github.com/jonnyjackson26/device-frames-media) | `public/device/iphone-16-pro.png`, used by `src/components/Phone.tsx` |
 
 ## Common changes
 - **The app is live in a store:** put its link in `appStoreUrl` / `playStoreUrl` in `src/lib/site.ts`. The "Coming soon" label goes away and the button becomes a link.

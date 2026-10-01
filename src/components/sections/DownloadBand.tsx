@@ -32,7 +32,7 @@ export function DownloadBand({ lang, dict }: { lang: Locale; dict: Dictionary })
             <StoreBadges dict={dict} onDark className="mt-10" />
           </Reveal>
           <Parallax distance={-30} className="mx-auto -mb-40 md:-mt-16 md:-mb-28">
-            <Phone src={screen(lang, "expenses")} alt={t.alt} className="w-60 rotate-6 md:w-72 rtl:-rotate-6" />
+            <Phone src={screen(lang, "expenses")} alt={t.alt} className="w-64 rotate-6 md:w-80 rtl:-rotate-6" />
           </Parallax>
         </div>
       </div>

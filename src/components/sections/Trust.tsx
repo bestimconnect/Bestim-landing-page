@@ -11,7 +11,7 @@ export function Trust({ lang, dict }: { lang: Locale; dict: Dictionary }) {
       <div className="mx-auto grid max-w-6xl items-center gap-14 md:grid-cols-2">
         <Reveal className="relative mx-auto w-fit">
           <span aria-hidden className="absolute inset-0 -z-10 scale-125 rounded-full bg-mint blur-3xl" />
-          <Phone src={screen(lang, "record")} alt={t.alt} className="w-64 md:w-72" />
+          <Phone src={screen(lang, "record")} alt={t.alt} className="w-72 md:w-80" />
           <Parallax distance={-40} className="absolute bottom-24 -end-8 md:-end-24">
             <div className="flex w-max items-center gap-3 rounded-metric bg-white p-3.5 pe-5 shadow-float">
               <span className="grid size-11 place-items-center rounded-full bg-ink text-lime">

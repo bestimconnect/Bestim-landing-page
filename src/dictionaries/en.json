@@ -18,9 +18,9 @@
   },
   "hero": {
     "eyebrow": "For cars, motorcycles and equipment",
-    "title1": "Log your car's maintenance by voice.",
-    "title2": "Clear reminders. A history you can trust.",
-    "body": "Bestim keeps every service, reminds you of the next one, and gathers your expenses in one place. When you sell, share your car's history with confidence.",
+    "title1": "Log maintenance by voice.",
+    "title2": "Keep a history you can trust.",
+    "body": "Every service saved, every reminder on time, every expense in one place. Ready to share when you sell.",
     "phoneAlt": "The Bestim app home screen",
     "reminderTitle": "Oil change approaching",
     "reminderSub": "450 km or 12 days left",
@@ -30,7 +30,14 @@
     "expenseValue": "EGP 24,560",
     "voice": "“Changed engine oil at 125,000 and paid 1,200 EGP”"
   },
-  "strip": ["Car", "Motorcycle", "Pickup", "Equipment", "By kilometers", "By operating hours"],
+  "strip": [
+    "Car",
+    "Motorcycle",
+    "Pickup",
+    "Equipment",
+    "By kilometers",
+    "By operating hours"
+  ],
   "features": {
     "eyebrow": "Why Bestim",
     "title1": "Everything your car needs,",
@@ -100,9 +107,18 @@
       "title": "Never miss a service",
       "body": "Parts that need your attention show up first.",
       "items": [
-        { "name": "Front brake pads", "sub": "Overdue by 800 km" },
-        { "name": "Engine oil", "sub": "450 km or 12 days left" },
-        { "name": "Air filter", "sub": "1,200 km left" }
+        {
+          "name": "Front brake pads",
+          "sub": "Overdue by 800 km"
+        },
+        {
+          "name": "Engine oil",
+          "sub": "450 km or 12 days left"
+        },
+        {
+          "name": "Air filter",
+          "sub": "1,200 km left"
+        }
       ]
     },
     "vehicles": {
