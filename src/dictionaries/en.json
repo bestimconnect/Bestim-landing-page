@@ -1,0 +1,208 @@
+{
+  "meta": {
+    "title": "Bestim: your car's maintenance history, trusted and effortless",
+    "description": "Log your car's maintenance by voice or by hand, follow reminders and expenses, and keep a history you can trust and share when you sell."
+  },
+  "nav": {
+    "features": "Features",
+    "how": "How it works",
+    "business": "For business",
+    "faq": "FAQ",
+    "download": "Get the app",
+    "home": "Bestim, home page"
+  },
+  "store": {
+    "soon": "Coming soon",
+    "appStoreTop": "Download on the",
+    "playTop": "Get it on"
+  },
+  "hero": {
+    "eyebrow": "For cars, motorcycles and equipment",
+    "title1": "Log your car's maintenance by voice.",
+    "title2": "Clear reminders. A history you can trust.",
+    "body": "Bestim keeps every service, reminds you of the next one, and gathers your expenses in one place. When you sell, share your car's history with confidence.",
+    "phoneAlt": "The Bestim app home screen",
+    "reminderTitle": "Oil change approaching",
+    "reminderSub": "450 km or 12 days left",
+    "savedTitle": "Record saved",
+    "savedSub": "Every step has a date",
+    "expenseLabel": "This month's expenses",
+    "expenseValue": "EGP 24,560",
+    "voice": "“Changed engine oil at 125,000 and paid 1,200 EGP”"
+  },
+  "strip": ["Car", "Motorcycle", "Pickup", "Equipment", "By kilometers", "By operating hours"],
+  "features": {
+    "eyebrow": "Why Bestim",
+    "title1": "Everything your car needs,",
+    "title2": "in one app.",
+    "body": "From the first oil change to the day you sell.",
+    "items": [
+      {
+        "title": "Voice logging",
+        "body": "Say what you did the way you'd tell a friend. We sort out the service, odometer and cost, and you review before saving."
+      },
+      {
+        "title": "Clear reminders",
+        "body": "We work out the next service by distance and time, and remind you ahead of it. Snooze when you need to."
+      },
+      {
+        "title": "Expenses at a glance",
+        "body": "A yearly total, monthly bars, and categories that show where your car's money goes."
+      },
+      {
+        "title": "Corrections keep the original",
+        "body": "When you edit a record the original stays saved and the change appears beside it. That keeps the history trustworthy."
+      },
+      {
+        "title": "Export and share",
+        "body": "Export the history as PDF or CSV, or share it by QR code or link with the new owner."
+      },
+      {
+        "title": "Works offline",
+        "body": "Log anywhere. We keep the record on your phone and upload it when you're back online."
+      }
+    ]
+  },
+  "how": {
+    "eyebrow": "How it works",
+    "title1": "Three steps,",
+    "title2": "and your car's history is safe.",
+    "stepLabel": "Step",
+    "steps": [
+      {
+        "title": "Say it or type it",
+        "body": "Tap the log button and say what you did: “Changed the oil at 125k and paid 1,200 pounds.” Or enter it by hand.",
+        "alt": "The voice logging screen"
+      },
+      {
+        "title": "Review and save",
+        "body": "We show the details sorted out: service type, odometer reading, cost. Edit anything and attach a photo of the receipt.",
+        "alt": "The review before save screen"
+      },
+      {
+        "title": "Get reminded on time",
+        "body": "We work out the next service and notify you ahead of it, so nothing slips.",
+        "alt": "The maintenance schedule screen"
+      }
+    ]
+  },
+  "bento": {
+    "eyebrow": "Everyday benefits",
+    "title1": "Small comforts,",
+    "title2": "every day.",
+    "expenses": {
+      "title": "Know where your money goes",
+      "body": "A clear total for each year, and a monthly breakdown for every vehicle.",
+      "totalLabel": "Total expenses 2026",
+      "currency": "Egyptian pounds"
+    },
+    "reminders": {
+      "title": "Never miss a service",
+      "body": "Parts that need your attention show up first.",
+      "items": [
+        { "name": "Front brake pads", "sub": "Overdue by 800 km" },
+        { "name": "Engine oil", "sub": "450 km or 12 days left" },
+        { "name": "Air filter", "sub": "1,200 km left" }
+      ]
+    },
+    "vehicles": {
+      "title": "All your vehicles, one account",
+      "body": "Car, motorcycle, pickup or equipment. By kilometers or by operating hours.",
+      "alt": "The My vehicles screen"
+    },
+    "share": {
+      "title": "Share it by QR code",
+      "body": "The buyer scans the code and receives a copy of the car's history.",
+      "alt": "The share vehicle history screen"
+    },
+    "guest": {
+      "title": "Try before you sign up",
+      "body": "Browse the app as a guest, and create your account when you're ready."
+    }
+  },
+  "trust": {
+    "eyebrow": "A history you can trust",
+    "title1": "Selling your car?",
+    "title2": "Let its history speak.",
+    "body": "A complete, dated service history reassures the buyer and makes selling easier. Share it by QR code or link, and choose what it shows.",
+    "points": [
+      "The original and the correction both stay visible. Nothing is erased",
+      "Suspicious odometer readings are flagged for review",
+      "You choose what to share: costs, receipts, notes"
+    ],
+    "alt": "The verified record details screen",
+    "chipTitle": "Its history goes with it",
+    "chipSub": "12 maintenance records · 5 reminders"
+  },
+  "connect": {
+    "title1": "Run a workshop or a fleet?",
+    "title2": "Bestim Connect is for you.",
+    "body": "A dashboard for workshops and fleet owners: records verified in your workshop's name, and every vehicle followed in one place.",
+    "points": [
+      {
+        "title": "Workshop-verified records",
+        "body": "Log the service on your customer's car so it appears in its history, verified by your workshop."
+      },
+      {
+        "title": "A whole fleet on one screen",
+        "body": "Vehicles, drivers and the cost of each vehicle, without scattered spreadsheets."
+      },
+      {
+        "title": "Reminders for the entire fleet",
+        "body": "Maintenance alerts for every vehicle, ahead of time."
+      }
+    ],
+    "cta": "Discover Bestim Connect"
+  },
+  "faq": {
+    "title1": "Common",
+    "title2": "questions",
+    "items": [
+      {
+        "q": "What is Bestim?",
+        "a": "An app that keeps your vehicle's maintenance history, reminds you of upcoming services and tracks your expenses. In Arabic and English."
+      },
+      {
+        "q": "Does it work offline?",
+        "a": "Yes. You can log maintenance without a connection, and the record uploads automatically when you're back online."
+      },
+      {
+        "q": "Which vehicles are supported?",
+        "a": "Cars, motorcycles, pickups and equipment. Track them by kilometers or by operating hours, and add more than one vehicle."
+      },
+      {
+        "q": "Is my data private?",
+        "a": "Yes. Nobody sees your records and receipts unless you share them. You can delete your account and all your data at any time from inside the app."
+      },
+      {
+        "q": "How do I share my car's history when I sell?",
+        "a": "From the vehicle page choose Share. You get a QR code or a link that is valid for 7 days. The receiver gets a copy of the history."
+      },
+      {
+        "q": "Do I need an account to try the app?",
+        "a": "No. You can browse the app as a guest first, then create an account with email or Google to keep your records."
+      },
+      {
+        "q": "When will the app be available?",
+        "a": "Soon on the App Store and Google Play."
+      }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Coming soon to the App Store and Google Play",
+    "title1": "Your car's history",
+    "title2": "starts with the first log.",
+    "alt": "The expenses screen in the Bestim app"
+  },
+  "footer": {
+    "tagline": "Your car's history, trusted and effortless.",
+    "product": "The app",
+    "legal": "Legal and support",
+    "privacy": "Privacy policy",
+    "terms": "Terms and conditions",
+    "support": "Support",
+    "deleteAccount": "Delete account and data",
+    "rights": "All rights reserved",
+    "updated": "Last updated"
+  }
+}

@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/* Brand tokens: copied from ../assets/brand/tokens.json (light set).
+   Source of truth is bestim-app/src/lib/palette.js. */
+@theme {
+  --color-lime: #d3f53d;
+  --color-ink: #222e29;
+  --color-teal: #08736f;
+  --color-paper: #f5f7f5;
+  --color-muted: #5b6860;
+  --color-line: #dee5df;
+  --color-coral: #f96a83;
+  --color-blush: #ffe5eb;
+  --color-sky: #ddebff;
+  --color-mint: #e4f3d9;
+  --color-amber: #fff0ce;
+
+  --radius-field: 14px;
+  --radius-item: 18px;
+  --radius-metric: 20px;
+  --radius-nav: 28px;
+  --radius-screen: 32px;
+
+  /* Poppins has no Arabic glyphs, so Arabic falls through to Tajawal while
+     Latin letters and digits stay Poppins in both languages.
+     The families are named directly (not via next/font's CSS variables) because
+     those variables append an Arial-based "Poppins Fallback" that has Arabic
+     glyphs and would win over Tajawal. */
+  --font-sans: "Poppins", "Tajawal", system-ui, sans-serif;
+
+  --shadow-card: 0 1px 2px rgb(34 46 41 / 0.04), 0 12px 32px -12px rgb(34 46 41 / 0.14);
+  --shadow-float: 0 2px 4px rgb(34 46 41 / 0.05), 0 24px 48px -16px rgb(34 46 41 / 0.28);
+  --shadow-glow: 0 10px 28px -10px rgb(211 245 61 / 0.9);
+
+  --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+  }
+
+  --animate-marquee: marquee 32s linear infinite;
+  @keyframes marquee {
+    to {
+      transform: translateX(calc(-50% * var(--dir, 1)));
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+[dir="rtl"] {
+  --dir: -1;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-marquee,
+  .animate-rise {
+    animation: none;
+  }
+}
