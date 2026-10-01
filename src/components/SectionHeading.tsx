@@ -27,10 +27,10 @@ export function SectionHeading({
       )}
       <h2 className="mt-5 text-balance text-3xl leading-[1.25] font-bold md:text-[2.75rem] rtl:leading-[1.45]">
         <span className="block">{title1}</span>
-        <span className={`block ${onDark ? "text-paper/45" : "text-muted/55"}`}>{title2}</span>
+        <span className={`block ${onDark ? "text-paper opacity-45" : "text-muted opacity-55"}`}>{title2}</span>
       </h2>
       {body && (
-        <p className={`mt-4 text-lg leading-8 ${onDark ? "text-paper/70" : "text-muted"}`}>{body}</p>
+        <p className={`mt-4 text-lg leading-8 ${onDark ? "text-paper opacity-70" : "text-muted"}`}>{body}</p>
       )}
     </div>
   );

@@ -30,7 +30,7 @@ export function StoreBadges({
   ];
   const skin = onDark ? "bg-paper text-ink" : "bg-ink text-paper";
   return (
-    <div className={`flex flex-wrap items-center gap-3 ${className}`}>
+    <div className={`flex flex-wrap items-center gap-x-3 gap-y-6 ${className}`}>
       {stores.map(({ name, top, icon, url }) => {
         const Tag = url ? "a" : "div";
         return (
@@ -48,8 +48,9 @@ export function StoreBadges({
                 {name}
               </span>
             </span>
+            {/* The label sits on the top edge, clear of the text inside the button. */}
             {!url && (
-              <span className="absolute -top-2.5 end-3 rounded-full bg-lime px-2.5 py-0.5 text-[11px] font-bold text-ink shadow-glow">
+              <span className="absolute -top-5 end-3 rounded-full bg-lime px-2.5 py-0.5 text-[11px] font-bold text-ink shadow-glow">
                 {dict.store.soon}
               </span>
             )}

@@ -14,7 +14,7 @@ export function VehicleStrip({ dict }: { dict: Dictionary }) {
         {[0, 1, 2, 3].map((copy) => (
           <ul key={copy} aria-hidden={copy > 0} className="flex shrink-0">
             {items.map(({ label, Icon }) => (
-              <li key={label} className="flex items-center gap-3 px-8 text-lg font-medium text-muted/80">
+              <li key={label} className="flex items-center gap-3 px-8 text-lg font-medium text-muted opacity-80">
                 <Icon className="size-6" strokeWidth={1.75} />
                 {label}
               </li>

@@ -33,9 +33,9 @@ export function Bento({ lang, dict }: { lang: Locale; dict: Dictionary }) {
                 <h3 className="text-2xl font-semibold">{t.expenses.title}</h3>
                 <p className="mt-2 leading-7 text-muted">{t.expenses.body}</p>
                 <div className="mt-7 rounded-metric bg-ink p-5 text-paper">
-                  <p className="text-sm text-paper/70">{t.expenses.totalLabel}</p>
+                  <p className="text-sm text-paper opacity-70">{t.expenses.totalLabel}</p>
                   <CountUp to={52380} className="mt-1 block text-4xl font-bold" />
-                  <p className="mt-1 text-sm text-paper/70">{t.expenses.currency}</p>
+                  <p className="mt-1 text-sm text-paper opacity-70">{t.expenses.currency}</p>
                 </div>
               </div>
               <div className="flex h-56 items-end gap-3 md:h-auto" dir="ltr" aria-hidden>
@@ -97,7 +97,7 @@ export function Bento({ lang, dict }: { lang: Locale; dict: Dictionary }) {
                 <UserRound className="size-5" />
               </span>
               <h3 className="mt-6 text-2xl font-semibold">{t.guest.title}</h3>
-              <p className="mt-2 leading-7 text-paper/70">{t.guest.body}</p>
+              <p className="mt-2 leading-7 text-paper opacity-70">{t.guest.body}</p>
               <span aria-hidden className="absolute -end-16 -bottom-20 size-56 rounded-full bg-lime/15 blur-2xl" />
             </div>
           </Reveal>

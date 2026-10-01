@@ -28,7 +28,7 @@ export function DownloadBand({ lang, dict }: { lang: Locale; dict: Dictionary })
             <p className="text-lime">{t.eyebrow}</p>
             <h2 className="mt-4 text-4xl leading-[1.25] font-bold md:text-5xl rtl:leading-[1.45]">
               <span className="block">{t.title1}</span>
-              <span className="block text-paper/45">{t.title2}</span>
+              <span className="block text-paper opacity-45">{t.title2}</span>
             </h2>
             <StoreBadges dict={dict} onDark className="mt-10" />
           </Reveal>

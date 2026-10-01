@@ -45,7 +45,7 @@ export function HowItWorks({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         {t.stepLabel} {i + 1}
       </span>
       <span className="mt-1.5 block text-xl font-semibold">{t.steps[i].title}</span>
-      <span className="mt-2 block leading-7 text-paper/70">{t.steps[i].body}</span>
+      <span className="mt-2 block leading-7 text-paper opacity-70">{t.steps[i].body}</span>
       {active === i && playing && (
         <span className="absolute inset-x-0 bottom-0 h-0.5 origin-left animate-progress bg-lime rtl:origin-right" />
       )}

@@ -52,7 +52,7 @@ export function Connect({ lang, dict }: { lang: Locale; dict: Dictionary }) {
                     </span>
                     <span>
                       <span className="block text-lg font-semibold">{point.title}</span>
-                      <span className="mt-1 block leading-7 text-white/75">{point.body}</span>
+                      <span className="mt-1 block leading-7 text-white opacity-75">{point.body}</span>
                     </span>
                   </Reveal>
                 </li>

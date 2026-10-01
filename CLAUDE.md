@@ -6,6 +6,7 @@ Read `../CLAUDE.md` first (shared briefing), then `README.md` here (where things
 - Every string lives in `src/dictionaries/{ar,en}.json` (Arabic written first). `npm run check` must pass.
 - RTL-first: use logical classes (`ms-`, `pe-`, `start-`, `end-`, `text-start`), never `left`/`right`/`ml`/`pr`.
 - No letter-spacing (`tracking-*`) on text: it breaks Arabic joining.
+- No see-through text colours (`text-muted/55`): joined Arabic letters overlap and show dark blotches. Use a solid colour plus `opacity-55` on the element.
 - Server Components by default. `"use client"` only for motion (`components/Motion.tsx`, `sections/HowItWorks.tsx`) and `LangSwitch`.
 - Above-the-fold content animates with CSS (`animate-rise`), not `Reveal`, so it shows before JavaScript loads.
 - Links, domain, store URLs: `src/lib/site.ts` only.
