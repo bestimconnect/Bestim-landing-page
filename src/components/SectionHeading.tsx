@@ -25,7 +25,7 @@ export function SectionHeading({
           {eyebrow}
         </p>
       )}
-      <h2 className="mt-5 text-balance text-3xl leading-[1.25] font-bold md:text-[2.75rem] md:leading-[1.2]">
+      <h2 className="mt-5 text-balance text-3xl leading-[1.25] font-bold md:text-[2.75rem] rtl:leading-[1.45]">
         <span className="block">{title1}</span>
         <span className={`block ${onDark ? "text-paper/45" : "text-muted/55"}`}>{title2}</span>
       </h2>

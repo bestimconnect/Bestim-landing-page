@@ -26,7 +26,7 @@ export function DownloadBand({ lang, dict }: { lang: Locale; dict: Dictionary })
         <div className="relative mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:px-12 md:py-0">
           <Reveal className="md:py-24">
             <p className="text-lime">{t.eyebrow}</p>
-            <h2 className="mt-4 text-4xl leading-[1.25] font-bold md:text-5xl md:leading-[1.2]">
+            <h2 className="mt-4 text-4xl leading-[1.25] font-bold md:text-5xl rtl:leading-[1.45]">
               <span className="block">{t.title1}</span>
               <span className="block text-paper/45">{t.title2}</span>
             </h2>

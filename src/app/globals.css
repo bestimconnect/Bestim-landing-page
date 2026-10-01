@@ -40,6 +40,14 @@
     }
   }
 
+  /* The timer line on the active "How it works" step. */
+  --animate-progress: progress 4.5s linear both;
+  @keyframes progress {
+    from {
+      transform: scaleX(0);
+    }
+  }
+
   --animate-marquee: marquee 32s linear infinite;
   @keyframes marquee {
     to {
@@ -51,6 +59,14 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;
+}
+/* The whole site at 90% on tablets and computers (founder request). Every size
+   is in rem, so this one line scales text, spacing and phones together.
+   Phones keep 100% so text stays readable. */
+@media (min-width: 768px) {
+  html {
+    font-size: 90%;
+  }
 }
 [dir="rtl"] {
   --dir: -1;

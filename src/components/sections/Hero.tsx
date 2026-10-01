@@ -45,7 +45,7 @@ export function Hero({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           <span className="size-2 rounded-full bg-teal ring-4 ring-teal/15" />
           {t.eyebrow}
         </p>
-        <h1 className="mt-5 text-balance text-[2.25rem] leading-[1.2] font-bold md:text-[3.5rem] md:leading-[1.18]">
+        <h1 className="mt-5 text-balance text-[2.25rem] leading-[1.2] font-bold md:text-5xl lg:text-[3.5rem] rtl:leading-[1.45]">
           <span className="block">{t.title1}</span>
           <span className="block text-muted/55">{t.title2}</span>
         </h1>
