@@ -23,12 +23,12 @@
     "body": "Every service saved, every reminder on time, every expense in one place. Ready to share when you sell.",
     "phoneAlt": "The Bestim app home screen",
     "reminderTitle": "Oil change approaching",
-    "reminderSub": "450 km or 12 days left",
+    "reminderSub": "450 km left",
     "savedTitle": "Record saved",
     "savedSub": "Every step has a date",
-    "expenseLabel": "This month's expenses",
-    "expenseValue": "EGP 24,560",
-    "voice": "“Changed engine oil at 125,000 and paid 1,200 EGP”"
+    "expenseLabel": "Total expenses 2026",
+    "expenseValue": "EGP 52,380",
+    "voice": "“Changed engine oil at 134,550 and paid 1,200 EGP”"
   },
   "strip": [
     "Car",
@@ -124,7 +124,7 @@
     "vehicles": {
       "title": "All your vehicles, one account",
       "body": "Car, motorcycle, pickup or equipment. By kilometers or by operating hours.",
-      "alt": "The My vehicles screen"
+      "alt": "The vehicle details screen"
     },
     "share": {
       "title": "Share it by QR code",
@@ -146,7 +146,7 @@
       "Suspicious odometer readings are flagged for review",
       "You choose what to share: costs, receipts, notes"
     ],
-    "alt": "The verified record details screen",
+    "alt": "A record details screen with a correction",
     "chipTitle": "Its history goes with it",
     "chipSub": "12 maintenance records · 5 reminders"
   },
