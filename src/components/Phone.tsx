@@ -6,25 +6,21 @@ import type { ReactNode } from "react";
 // screenshot placed behind the screen opening.
 // Size it from outside with a width (w-72) or a height (h-[56svh] w-auto).
 // Pass `children` instead of `src` to stack several screens (see HowItWorks).
-export const phoneShadow = "drop-shadow-[0_28px_36px_rgb(34_46_41/0.28)]";
-
 export function Phone({
   src,
   alt = "",
   className = "",
   priority,
-  shadow = true,
   children,
 }: {
   src?: StaticImageData;
   alt?: string;
   className?: string;
   priority?: boolean;
-  shadow?: boolean;
   children?: ReactNode;
 }) {
   return (
-    <div className={`relative aspect-[1406/2822] ${shadow ? phoneShadow : ""} ${className}`}>
+    <div className={`relative aspect-[1406/2822] drop-shadow-[0_28px_36px_rgb(34_46_41/0.28)] ${className}`}>
       {/* The screen opening, as a share of the frame image. */}
       <div className="absolute top-[3.54%] left-[7.11%] h-[92.92%] w-[85.78%] overflow-hidden rounded-[15.5%/7.1%] bg-paper">
         {src ? (

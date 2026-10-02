@@ -40,19 +40,6 @@
     }
   }
 
-  /* The hero's front phone: one full turn around itself as the page opens, slightly tilted
-     so its top edge shows, then it settles flat. No opacity in here: a see-through element is
-     flattened by the browser and would lose its depth (the fade is on the wrapper). */
-  --animate-turn: turn 2.4s cubic-bezier(0.65, 0, 0.35, 1) both;
-  @keyframes turn {
-    from {
-      transform: perspective(1400px) rotateX(10deg) rotateY(-360deg) scale(0.9);
-    }
-    to {
-      transform: perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1);
-    }
-  }
-
   /* The timer line on the active "How it works" step. */
   --animate-progress: progress 4.5s linear both;
   @keyframes progress {
@@ -95,8 +82,7 @@ body {
     scroll-behavior: auto;
   }
   .animate-marquee,
-  .animate-rise,
-  .animate-turn {
+  .animate-rise {
     animation: none;
   }
 }
