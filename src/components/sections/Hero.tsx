@@ -41,11 +41,7 @@ export function Hero({ lang, dict }: { lang: Locale; dict: Dictionary }) {
 
       {/* The hero enters with a CSS animation (not Reveal) so it shows before any JavaScript loads. */}
       <div className="mx-auto max-w-5xl animate-rise text-center">
-        <p className="inline-flex items-center gap-2.5 rounded-full border border-line bg-white px-4 py-1.5 text-sm text-muted">
-          <span className="size-2 rounded-full bg-teal ring-4 ring-teal/15" />
-          {t.eyebrow}
-        </p>
-        <h1 className="mt-5 text-balance text-[2.25rem] leading-[1.2] font-bold md:text-5xl lg:text-[3.5rem] rtl:leading-[1.45]">
+        <h1 className="text-balance text-[2.25rem] leading-[1.2] font-bold md:text-5xl lg:text-[3.5rem] rtl:leading-[1.45]">
           <span className="block">{t.title1}</span>
           <span className="block text-muted opacity-55">{t.title2}</span>
         </h1>
