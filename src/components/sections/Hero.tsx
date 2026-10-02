@@ -1,4 +1,5 @@
 import { Check, Droplet, Mic, TrendingUp } from "lucide-react";
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { Parallax } from "@/components/Motion";
 import { Phone } from "@/components/Phone";
@@ -71,12 +72,24 @@ export function Hero({ lang, dict }: { lang: Locale; dict: Dictionary }) {
             className="w-64 rotate-8 animate-rise [animation-delay:400ms] rtl:-rotate-8"
           />
         </Parallax>
-        <Phone
-          src={screen(lang, "vehicles")}
-          alt={t.phoneAlt}
-          priority
-          className="w-72 animate-rise [animation-delay:150ms] md:w-[22rem]"
-        />
+        {/* The front phone turns once around itself as the page opens (CSS, so it runs before any JavaScript).
+            Two faces: the phone, and a plain titanium back that shows for the half-turn it faces away. */}
+        <div className="relative animate-rise [animation-delay:150ms]">
+          <div className="relative animate-spin-in transform-3d [animation-delay:150ms]">
+            <Phone
+              src={screen(lang, "vehicles")}
+              alt={t.phoneAlt}
+              priority
+              className="w-72 backface-hidden md:w-[22rem]"
+            />
+            <div
+              aria-hidden
+              className="absolute inset-x-[3.9%] inset-y-[1.95%] grid rotate-y-180 place-items-center rounded-[17.5%/8.5%] bg-linear-to-br from-[#c9c5bb] to-[#97938a] backface-hidden"
+            >
+              <Image src="/brand/logo-mark.png" alt="" width={512} height={384} className="w-16 opacity-80" />
+            </div>
+          </div>
+        </div>
 
         {/* Floating cards. Phones and tablets: two cards on the front phone's edges.
             Computers: all four, out on the edges of the side phones. */}

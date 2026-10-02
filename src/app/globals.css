@@ -40,6 +40,19 @@
     }
   }
 
+  /* The hero's front phone: one full turn around itself while it rises into place. */
+  --animate-spin-in: spin-in 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* No opacity in here: a see-through element is flattened by the browser, which would
+     show the phone mirrored instead of its back. The fade is on the wrapper (animate-rise). */
+  @keyframes spin-in {
+    from {
+      transform: perspective(1600px) rotateY(-360deg) scale(0.92);
+    }
+    to {
+      transform: perspective(1600px) rotateY(0deg) scale(1);
+    }
+  }
+
   /* The timer line on the active "How it works" step. */
   --animate-progress: progress 4.5s linear both;
   @keyframes progress {
@@ -82,7 +95,8 @@ body {
     scroll-behavior: auto;
   }
   .animate-marquee,
-  .animate-rise {
+  .animate-rise,
+  .animate-spin-in {
     animation: none;
   }
 }
