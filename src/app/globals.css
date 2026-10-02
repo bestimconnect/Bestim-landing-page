@@ -40,16 +40,16 @@
     }
   }
 
-  /* The hero's front phone: one full turn around itself while it rises into place. */
-  --animate-spin-in: spin-in 1.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-  /* No opacity in here: a see-through element is flattened by the browser, which would
-     show the phone mirrored instead of its back. The fade is on the wrapper (animate-rise). */
-  @keyframes spin-in {
+  /* The hero's front phone: one full turn around itself as the page opens, slightly tilted
+     so its top edge shows, then it settles flat. No opacity in here: a see-through element is
+     flattened by the browser and would lose its depth (the fade is on the wrapper). */
+  --animate-turn: turn 2.4s cubic-bezier(0.65, 0, 0.35, 1) both;
+  @keyframes turn {
     from {
-      transform: perspective(1600px) rotateY(-360deg) scale(0.92);
+      transform: perspective(1400px) rotateX(10deg) rotateY(-360deg) scale(0.9);
     }
     to {
-      transform: perspective(1600px) rotateY(0deg) scale(1);
+      transform: perspective(1400px) rotateX(0deg) rotateY(0deg) scale(1);
     }
   }
 
@@ -96,7 +96,7 @@ body {
   }
   .animate-marquee,
   .animate-rise,
-  .animate-spin-in {
+  .animate-turn {
     animation: none;
   }
 }
