@@ -14,7 +14,23 @@
   "store": {
     "soon": "Coming soon",
     "appStoreTop": "Download on the",
-    "playTop": "Get it on"
+    "playTop": "Get it on",
+    "galleryTop": "Explore it on"
+  },
+  "receive": {
+    "metaTitle": "Receive a vehicle history",
+    "metaDescription": "Open the link you received in the Bestim app to receive a vehicle's maintenance history.",
+    "title": "Someone shared a vehicle's history with you",
+    "body": "This link opens in the Bestim app.",
+    "open": "Open in Bestim",
+    "noApp": "Don't have the app yet?",
+    "stepsTitle": "How it works",
+    "steps": [
+      "Install Bestim.",
+      "Create an account.",
+      "Come back here and tap this link again, or paste it in the app: in Account, choose Share vehicle history, then I received a link."
+    ],
+    "invalid": "This link is incomplete. Ask the sender to share it with you again."
   },
   "hero": {
     "title1": "Log maintenance by voice.",
@@ -201,12 +217,12 @@
       },
       {
         "q": "When will the app be available?",
-        "a": "Soon on the App Store and Google Play."
+        "a": "Soon on the App Store, Google Play and AppGallery."
       }
     ]
   },
   "cta": {
-    "eyebrow": "Coming soon to the App Store and Google Play",
+    "eyebrow": "Coming soon to the App Store, Google Play and AppGallery",
     "title1": "Your car's history",
     "title2": "starts with the first log.",
     "alt": "The expenses screen in the Bestim app"
