@@ -6,4 +6,5 @@ export const site = {
   // null = not in the store yet: the badge says "Coming soon" and isn't a link.
   appStoreUrl: null as string | null,
   playStoreUrl: null as string | null,
+  appGalleryUrl: null as string | null,
 };

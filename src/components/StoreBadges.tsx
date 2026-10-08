@@ -13,7 +13,15 @@ const PlayIcon = (
   </svg>
 );
 
-// App Store + Google Play buttons. A store without a link in site.ts shows
+// A simple rounded shopping bag (our own drawing, not any store's logo).
+const GalleryIcon = (
+  <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <rect x="3.5" y="7.5" width="17" height="13" rx="4" />
+    <path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3" />
+  </svg>
+);
+
+// App Store + Google Play + AppGallery buttons. A store without a link in site.ts shows
 // "Coming soon" and is not clickable.
 export function StoreBadges({
   dict,
@@ -27,6 +35,7 @@ export function StoreBadges({
   const stores = [
     { name: "App Store", top: dict.store.appStoreTop, icon: AppleIcon, url: site.appStoreUrl },
     { name: "Google Play", top: dict.store.playTop, icon: PlayIcon, url: site.playStoreUrl },
+    { name: "AppGallery", top: dict.store.galleryTop, icon: GalleryIcon, url: site.appGalleryUrl },
   ];
   const skin = onDark ? "bg-paper text-ink" : "bg-ink text-paper";
   return (

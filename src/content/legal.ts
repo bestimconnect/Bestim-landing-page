@@ -2,7 +2,7 @@
 export type LegalDoc = {
   title: string;
   description: string; // one sentence, used for the page's meta description
-  updated: string; // "2026-10-02" (same in both languages)
+  updated: string; // "2026-10-05" (same in both languages)
   intro: string;
   sections: { heading: string; body?: string[]; list?: string[] }[];
 };
@@ -10,7 +10,7 @@ export type LegalDoc = {
 export const legalSlugs = ["privacy", "terms", "support", "delete-account"] as const;
 export type LegalSlug = (typeof legalSlugs)[number];
 
-const updated = "2026-10-02";
+const updated = "2026-10-05";
 
 export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
   privacy: {
@@ -32,38 +32,58 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
           heading: "ما البيانات التي نجمعها ولماذا",
           body: ["نجمع فقط ما يلزم لتعمل الميزات التي تستخدمها:"],
           list: [
-            "الحساب: اسمك وبريدك الإلكتروني، لكي تسجّل دخولك وتجد بياناتك على أي هاتف.",
+            "الحساب: اسمك وبريدك الإلكتروني، لكي تسجّل دخولك وتجد بياناتك على أي هاتف. وإذا سجّلت الدخول بحساب Google نستلم أيضا رابط صورة حسابك في Google.",
             "المركبات: النوع والطراز والسنة وقراءة العداد أو ساعات التشغيل. ويمكنك اختياريا إضافة رقم اللوحة ورقم الهيكل.",
             "سجلات الصيانة: نوع الخدمة والتاريخ وقراءة العداد والتكلفة واسم الورشة والملاحظات.",
+            "نص ما قلته بصوتك: عندما تسجّل بالصوت، يُحفظ نص كلامك مع السجل. التفاصيل في القسم التالي.",
             "التصحيحات: عندما تعدّل سجلا، نحتفظ بالأصل ونعرض التعديل بجانبه. هذا يجعل التاريخ أكثر ثقة عند البيع.",
             "المواعيد والمصاريف: المواعيد التي تضبطها والمبالغ التي تسجلها.",
-            "صور الفواتير: الصور التي ترفقها بنفسك، وتُحفظ في مساحة خاصة بك.",
+            "صور الفواتير: الصور التي تختارها بنفسك من مكتبة صور هاتفك، وتُحفظ في مساحة خاصة بك.",
             "الإعدادات: تفضيلات التنبيهات واللغة والوضع الداكن.",
           ],
         },
         {
-          heading: "الصوت والكاميرا والتنبيهات",
+          heading: "التسجيل بالصوت",
+          body: [
+            "عندما تسجّل بصوتك، يُرسَل التسجيل عبر خادم بستيم إلى خدمة ذكاء اصطناعي من Google اسمها Gemini. تكتب هذه الخدمة ما قلته، وتقترح لك السجلات المناسبة: صيانة أو مصروفات أو قراءة العداد. وفي أثناء كلامك، قد تعرض خدمة الكلام في هاتفك نفسه (من Apple أو Google بحسب هاتفك) معاينة حية للكلمات.",
+            "نرسل مع التسجيل أيضا قائمة مركباتك (الاسم والسنة وقراءة العداد)، ليعرف الذكاء الاصطناعي أي مركبة تقصد.",
+            "أنت تراجع كل سجل مقترح، ويمكنك تعديله أو حذفه قبل أن يُحفظ أي شيء.",
+            "بستيم لا تحتفظ بالتسجيل الصوتي. يُحذف من هاتفك فور إرساله، ولا يحفظه خادمنا، ونطلب من Google ألا تحفظه. أما نص ما قلته فيُحفظ مع السجل.",
+            "التسجيل بالصوت يحتاج حسابا كاملا وليس حساب زائر، وله حد يومي.",
+          ],
+        },
+        {
+          heading: "الميكروفون والكاميرا والتنبيهات",
           body: [
             "نطلب أي إذن فقط عندما تستخدم الميزة التي تحتاجه، ويمكنك رفضه أو سحبه من إعدادات هاتفك في أي وقت.",
           ],
           list: [
-            "الميكروفون: لتسجيل الصيانة بصوتك. يحوّل التعرّف على الكلام في هاتفك صوتك إلى نص، وقد تقدّم هذه الخدمة شركة Apple أو Google بحسب هاتفك. بعد ذلك تُعالَج النصوص لتعبئة حقول السجل، وتراجعها أنت قبل الحفظ. بستيم لا تحفظ تسجيلات صوتية.",
-            "الكاميرا والصور: لإرفاق صورة فاتورة بسجل. لا نصل إلى صورك إلا التي تختارها بنفسك.",
+            "الميكروفون: للتسجيل بالصوت فقط.",
+            "الكاميرا: لقراءة رقم العداد من لوحة السيارة. تتم القراءة على هاتفك نفسه بقارئ نصوص من Google يعمل داخل الهاتف. لا نحفظ ولا نرسل أي صورة أو فيديو.",
+            "الصور: لإرفاق صورة فاتورة بسجل. تختارها أنت من مكتبة صور هاتفك، ولا نصل إلى غيرها. وتُحفظ في مساحة خاصة.",
             "التنبيهات: لتذكيرك بمواعيد الصيانة. تُجدول التذكيرات على هاتفك نفسه.",
+          ],
+        },
+        {
+          heading: "التجربة كزائر",
+          body: [
+            "يمكنك تجربة التطبيق كزائر. حساب الزائر بلا اسم ولا بريد، لكن المركبة التي يضيفها الزائر تُحفظ على خوادمنا بالطريقة نفسها.",
+            "يمكنك لاحقا تحويل حساب الزائر إلى حساب كامل مع بقاء بياناتك. أو احذف بيانات الزائر من داخل التطبيق: اضغط تبويب «حسابي»، ثم «احذف بياناتي كزائر». أو راسلنا على bestim.connect@gmail.com.",
           ],
         },
         {
           heading: "أين تُحفظ بياناتك ومن يعالجها",
           body: [
             "تُحفظ بياناتك لدى Supabase، وهي مزوّد استضافة وقواعد بيانات. تعمل بستيم على حماية كل صف من البيانات بحيث يرى كل مستخدم بياناته هو فقط.",
-            "إذا سجّلت الدخول بحساب Google، تستخدم Google هذه الخدمة لتأكيد هويتك، ونستلم منها اسمك وبريدك الإلكتروني. وحيث يتوفر، قد يكون تسجيل الدخول عبر Apple متاحا بالطريقة نفسها.",
-            "لا نستخدم أدوات إعلانات أو تتبّع لجهات أخرى داخل التطبيق.",
+            "تستخدم بستيم خدمة Google في أمرين: تسجيل الدخول بحساب Google إذا اخترته (نستلم منها اسمك وبريدك ورابط صورة حسابك)، وخدمة الذكاء الاصطناعي في التسجيل بالصوت كما هو موضح أعلاه.",
+            "نستخدم خدمة بريد اسمها Resend لإرسال رسائل الحساب فقط، مثل «أكّد بريدك» و«أعد تعيين كلمة المرور».",
+            "لا توجد في بستيم إعلانات، ولا نستخدم أدوات تتبّع أو تحليلات.",
           ],
         },
         {
           heading: "المشاركة مع الآخرين",
           body: [
-            "لا يرى أحد بياناتك إلا إذا شاركتها أنت. عندما تشارك تاريخ مركبة برمز QR أو برابط، يحصل المستلم على نسخة من السجل. الرابط صالح لمدة 7 أيام.",
+            "لا يرى أحد بياناتك إلا إذا شاركتها أنت. عندما تشارك تاريخ مركبة برمز QR أو برابط، يحصل المستلم على نسخة من السجل. الرابط أو الرمز صالح لمدة 7 أيام ويعمل مرة واحدة. النسخة التي يستلمها الشخص لا تتضمن رقم اللوحة ولا رقم الهيكل ولا صور الفواتير ولا نص التسجيل الصوتي.",
             "عند التصدير بصيغة PDF أو CSV أو JSON، أنت تختار ما يُضمَّن في الملف. ما ترسله لغيرك يصبح في يده، ولا نستطيع سحبه منه.",
             "لا نبيع بياناتك ولا نؤجّرها، ولا يوجد في بستيم أي إعلانات.",
           ],
@@ -73,7 +93,7 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
           body: [
             "نحتفظ ببياناتك ما دام حسابك موجودا. عندما تحذف حسابك تُحذف بياناتك نهائيا، وتُمحى النسخ الاحتياطية خلال 30 يوما.",
             "للحذف من داخل التطبيق: تبويب «حسابي»، ثم «حذف حسابي». وإن لم تستطع فتح التطبيق، أرسل لنا من بريد الحساب إلى bestim.connect@gmail.com. التفاصيل الكاملة في صفحة حذف الحساب.",
-            "يمكنك أيضا حذف بيانات مركبة واحدة فقط من داخل التطبيق.",
+            "يمكنك أيضا حذف بيانات مركبة واحدة فقط من داخل التطبيق. وإذا كنت زائرا، يمكنك حذف بيانات الزائر كما هو موضح في قسم «التجربة كزائر».",
           ],
         },
         {
@@ -112,38 +132,58 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
           heading: "What we collect and why",
           body: ["We collect only what is needed for the features you use:"],
           list: [
-            "Account: your name and email, so you can sign in and find your data on any phone.",
+            "Account: your name and email, so you can sign in and find your data on any phone. If you sign in with Google, we also receive the link to your Google profile picture.",
             "Vehicles: make, model, year, and odometer or operating hours. You may also add a plate number and VIN if you want.",
             "Maintenance logs: service type, date, odometer, cost, workshop name and notes.",
+            "The text of what you said: when you log by voice, the text of your speech is saved with the record. See the next section.",
             "Corrections: when you edit a log, we keep the original and show your edit next to it. This makes the history more trustworthy when you sell.",
             "Reminders and expenses: the reminders you set and the amounts you record.",
-            "Receipt photos: the photos you attach yourself, kept in private storage.",
+            "Receipt photos: the photos you choose yourself from your phone's photo library, kept in private storage.",
             "Settings: notification preferences, language and dark mode.",
           ],
         },
         {
-          heading: "Voice, camera and notifications",
+          heading: "Logging by voice",
+          body: [
+            "When you log by voice, the recording is sent through Bestim's server to an AI service from Google called Gemini. It writes down what you said and suggests the right records: maintenance, expenses or an odometer reading. While you speak, your phone's own speech service (from Apple or Google, depending on your phone) may show a live preview of the words.",
+            "Together with the recording, we send the list of your vehicles (name, year and odometer), so the AI can tell which vehicle you mean.",
+            "You review every suggested record, and you can edit or remove it before anything is saved.",
+            "Bestim does not keep the recording. It is deleted from your phone right after it is sent, our server does not store it, and we ask Google not to store it. The text of what you said is saved with the record.",
+            "Voice logging needs a full account, not a guest account, and it has a daily limit.",
+          ],
+        },
+        {
+          heading: "Microphone, camera and notifications",
           body: [
             "We ask for a permission only when you use the feature that needs it. You can refuse it, or take it back in your phone settings at any time.",
           ],
           list: [
-            "Microphone: to log maintenance by voice. Your phone's speech recognition turns your speech into text, and depending on your phone this service may be provided by Apple or Google. The text is then processed to fill in the log fields, and you review it before saving. Bestim does not store audio recordings.",
-            "Camera and photos: to attach a receipt photo to a log. We only access the photos you choose.",
+            "Microphone: only for logging by voice.",
+            "Camera: to read the odometer number from your dashboard. The reading happens on your phone itself, using a Google text reader that runs on the phone. No picture or video is saved or sent.",
+            "Photos: to attach a receipt photo to a log. You choose it from your phone's photo library, and we cannot see any other photo. It is stored in private storage.",
             "Notifications: to remind you of maintenance. Reminders are scheduled on your phone itself.",
+          ],
+        },
+        {
+          heading: "Trying the app as a guest",
+          body: [
+            "You can try the app as a guest. A guest account has no name or email, but the vehicle a guest adds is stored on our servers in the same way.",
+            "You can turn a guest account into a full account later and keep your data. Or you can delete the guest data from inside the app: tap the Account tab, then Delete my guest data. Or email us at bestim.connect@gmail.com.",
           ],
         },
         {
           heading: "Where your data is stored and who processes it",
           body: [
             "Your data is stored with Supabase, a hosting and database provider. Bestim protects every row of data so that each user can see only their own.",
-            "If you sign in with Google, Google is used to confirm who you are, and we receive your name and email from it. Where available, sign-in with Apple may work in the same way.",
-            "We do not use third-party advertising or tracking tools inside the app.",
+            "Bestim uses Google for two things: signing in with a Google account, if you choose it (we receive your name, email and the link to your profile picture), and the AI service for voice logging, as explained above.",
+            "We use an email delivery service called Resend only to send account emails, such as Confirm your email and Reset your password.",
+            "Bestim has no ads, and we do not use tracking or analytics tools.",
           ],
         },
         {
           heading: "Sharing with others",
           body: [
-            "No one sees your data unless you share it. When you share a vehicle's history by QR code or link, the receiver gets a copy of the history. The link is valid for 7 days.",
+            "No one sees your data unless you share it. When you share a vehicle's history by QR code or link, the receiver gets a copy of the history. The link or code is valid for 7 days and works once. The copy the receiver gets does not include the plate number, the VIN, receipt photos or the text of voice logs.",
             "When you export as PDF, CSV or JSON, you choose what goes into the file. What you send to someone else is in their hands, and we cannot take it back.",
             "We do not sell or rent your data, and Bestim has no ads.",
           ],
@@ -153,7 +193,7 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
           body: [
             "We keep your data as long as your account exists. When you delete your account, your data is deleted permanently, and backups are cleared within 30 days.",
             "To delete from inside the app: Account tab, then Delete my account. If you cannot open the app, email us from the account's email address at bestim.connect@gmail.com. The full details are on the Delete account page.",
-            "You can also delete the data of a single vehicle from inside the app.",
+            "You can also delete the data of a single vehicle from inside the app. If you are a guest, you can delete the guest data as explained in Trying the app as a guest.",
           ],
         },
         {
@@ -199,7 +239,7 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
         {
           heading: "حسابك",
           body: [
-            "يمكنك الدخول بالبريد وكلمة المرور، أو بحساب Google، أو كزائر. وحيث يتوفر، قد يكون الدخول عبر Apple متاحا أيضا.",
+            "يمكنك الدخول بالبريد وكلمة المرور، أو بحساب Google، أو كزائر.",
             "أنت مسؤول عن حفظ كلمة مرورك، وعن كل ما يحدث في حسابك. إذا شككت أن أحدا دخل حسابك، راسلنا فورا.",
           ],
         },
@@ -208,6 +248,12 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
           body: [
             "ما تسجّله في بستيم يبقى ملكك. تمنحنا فقط الحق في حفظه وعرضه لك، وفي مشاركته مع من تختاره أنت.",
             "أنت مسؤول عن صحة ما تدخله: الأرقام والتواريخ والتكاليف. إذا أخطأت يمكنك تصحيح السجل، وسيبقى الأصل ظاهرا بجانب التصحيح. لا تدخل معلومات تعرف أنها غير صحيحة، خصوصا إذا كنت ستشاركها مع مشترٍ.",
+          ],
+        },
+        {
+          heading: "السجلات المقترحة من الصوت",
+          body: [
+            "السجلات التي تُقترح من تسجيلك الصوتي تُنتجها خدمة ذكاء اصطناعي، وقد تكون خاطئة. راجع كل سجل قبل أن تحفظه، فأنت المسؤول عما تحفظه.",
           ],
         },
         {
@@ -280,7 +326,7 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
         {
           heading: "Your account",
           body: [
-            "You can sign in with email and password, with a Google account, or as a guest. Where available, sign-in with Apple may also be offered.",
+            "You can sign in with email and password, with a Google account, or as a guest.",
             "You are responsible for keeping your password safe and for everything that happens in your account. If you think someone got into your account, write to us right away.",
           ],
         },
@@ -289,6 +335,12 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
           body: [
             "What you record in Bestim stays yours. You only give us the right to store it, show it to you, and share it with the people you choose.",
             "You are responsible for the accuracy of what you enter: numbers, dates and costs. If you make a mistake, you can correct the log, and the original stays visible next to the correction. Do not enter information you know is untrue, especially if you will share it with a buyer.",
+          ],
+        },
+        {
+          heading: "Records suggested from voice",
+          body: [
+            "Records suggested from your voice recording are produced by an AI service, and they can be wrong. Review every record before you save it. You are responsible for what you save.",
           ],
         },
         {
@@ -460,12 +512,18 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
           ],
         },
         {
+          heading: "إذا كنت تستخدم التطبيق كزائر",
+          body: [
+            "حساب الزائر بلا اسم ولا بريد، لكن المركبة التي أضفتها محفوظة على خوادمنا. يمكنك حذفها من داخل التطبيق: اضغط تبويب «حسابي»، ثم «احذف بياناتي كزائر» وأكّد الحذف. أو راسلنا على bestim.connect@gmail.com واكتب في العنوان «حذف بيانات زائر».",
+          ],
+        },
+        {
           heading: "ما الذي يُحذف",
           body: ["يُحذف نهائيا، ولا يمكن استرجاعه بعد ذلك:"],
           list: [
             "حسابك وبياناتك الشخصية (الاسم والبريد).",
             "كل مركباتك.",
-            "كل سجلات الصيانة.",
+            "كل سجلات الصيانة، ومعها نص ما قلته بصوتك في هذه السجلات.",
             "كل التصحيحات التي أضفتها على السجلات.",
             "كل المواعيد والتذكيرات.",
             "كل المصاريف.",
@@ -506,12 +564,18 @@ export const legal: Record<LegalSlug, Record<"ar" | "en", LegalDoc>> = {
           ],
         },
         {
+          heading: "If you use the app as a guest",
+          body: [
+            "A guest account has no name or email, but the vehicle you added is stored on our servers. You can delete it from inside the app: tap the Account tab, then Delete my guest data, and confirm. Or email us at bestim.connect@gmail.com with Delete guest data as the subject.",
+          ],
+        },
+        {
           heading: "What is deleted",
           body: ["The following is deleted permanently and cannot be recovered afterwards:"],
           list: [
             "Your account and personal details (name and email).",
             "All your vehicles.",
-            "All maintenance logs.",
+            "All maintenance logs, together with the text of your voice notes in those logs.",
             "All corrections you added to logs.",
             "All reminders.",
             "All expenses.",
