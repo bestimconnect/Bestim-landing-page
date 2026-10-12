@@ -110,14 +110,14 @@ export function Bento({ lang, dict }: { lang: Locale; dict: Dictionary }) {
             </Reveal>
           ))}
 
-          {/* Guest mode */}
+          {/* Account */}
           <Reveal delay={0.16} className="md:col-span-2">
             <div className="relative h-full min-h-64 overflow-hidden rounded-nav bg-ink p-7 text-paper shadow-card">
               <span className="grid size-12 place-items-center rounded-full bg-lime text-ink">
                 <UserRound className="size-5" />
               </span>
-              <h3 className="mt-6 text-2xl font-semibold">{t.guest.title}</h3>
-              <p className="mt-2 leading-7 text-paper opacity-70">{t.guest.body}</p>
+              <h3 className="mt-6 text-2xl font-semibold">{t.account.title}</h3>
+              <p className="mt-2 leading-7 text-paper opacity-70">{t.account.body}</p>
               <span aria-hidden className="absolute -end-16 -bottom-20 size-56 rounded-full bg-lime/15 blur-2xl" />
             </div>
           </Reveal>
