@@ -46,12 +46,12 @@
     "voice": "“Changed engine oil at 134,550 and paid 1,200 EGP”"
   },
   "strip": [
-    "Car",
-    "Motorcycle",
+    "Sedan",
+    "Hatchback",
+    "SUV",
     "Pickup",
-    "Equipment",
-    "By kilometers",
-    "By operating hours"
+    "Van",
+    "Every brand sold in Egypt"
   ],
   "features": {
     "eyebrow": "Why Bestim",
@@ -73,7 +73,7 @@
       },
       {
         "title": "Corrections keep the original",
-        "body": "When you edit a record the original stays saved and the change appears beside it. That keeps the history trustworthy."
+        "body": "You can change a record freely during its first 24 hours. After that, a change needs a short reason, and the original stays visible beside it. That keeps the history trustworthy."
       },
       {
         "title": "Export and share",
@@ -138,7 +138,7 @@
     },
     "vehicles": {
       "title": "All your vehicles, one account",
-      "body": "Car, motorcycle, pickup or equipment. By kilometers or by operating hours.",
+      "body": "Pick your brand and model from the list: sedan, SUV, pickup, van and more.",
       "alt": "The Bestim app home screen"
     },
     "share": {
@@ -148,9 +148,9 @@
       "scanTitle": "Scan to receive the history",
       "scanSub": "Valid for 7 days"
     },
-    "guest": {
-      "title": "Try before you sign up",
-      "body": "Browse the app as a guest, and create your account when you're ready."
+    "account": {
+      "title": "Your account in a minute",
+      "body": "Sign up with email and password, or with Google, and start."
     }
   },
   "trust": {
@@ -159,7 +159,7 @@
     "title2": "Let its history speak.",
     "body": "A complete, dated service history reassures the buyer and makes selling easier. Share it by QR code or link, and choose what it shows.",
     "points": [
-      "The original and the correction both stay visible. Nothing is erased",
+      "After the first day, the original and the correction both stay visible",
       "Suspicious odometer readings are flagged for review",
       "You choose what to share: costs, receipts, notes"
     ],
@@ -201,7 +201,7 @@
       },
       {
         "q": "Which vehicles are supported?",
-        "a": "Cars, motorcycles, pickups and equipment. Track them by kilometers or by operating hours, and add more than one vehicle."
+        "a": "Cars of every kind: sedans, hatchbacks, SUVs, coupes, pickups and vans. Pick your brand and model from the list, and add more than one car."
       },
       {
         "q": "Is my data private?",
@@ -212,8 +212,8 @@
         "a": "From the vehicle page choose Share. You get a QR code or a link that is valid for 7 days. The receiver gets a copy of the history."
       },
       {
-        "q": "Do I need an account to try the app?",
-        "a": "No. You can browse the app as a guest first, then create an account with email or Google to keep your records."
+        "q": "Do I need an account to use the app?",
+        "a": "Yes. Create an account with email and password, or with Google, to keep your records and find them on any phone."
       },
       {
         "q": "When will the app be available?",
