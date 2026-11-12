@@ -2,6 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { site } from "@/lib/site";
 
+const PUBLIC = ["/dashboard/login", "/dashboard/forgot", "/dashboard/reset"];
+
 // Keeps the admin's sign-in fresh and sends signed-out visitors to the login page.
 // This is only the first check: every dashboard page and every database read checks again.
 export async function proxy(request: NextRequest) {
@@ -17,7 +19,7 @@ export async function proxy(request: NextRequest) {
     },
   });
   const { data } = await supabase.auth.getClaims();
-  if (!data?.claims && request.nextUrl.pathname !== "/dashboard/login") {
+  if (!data?.claims && !PUBLIC.includes(request.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/dashboard/login", request.url));
   }
   return response;

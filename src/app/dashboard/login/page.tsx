@@ -1,5 +1,6 @@
 import { ShieldCheck } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { signIn } from "@/dashboard/actions";
 import { getDash } from "@/dashboard/i18n";
 import { LangToggle } from "@/dashboard/ui";
@@ -8,6 +9,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/dashboard/
   const { t, lang } = await getDash();
   const { e } = await searchParams;
   const error = e === "invalid" ? t.login.invalid : e === "notAdmin" ? t.login.notAdmin : null;
+  const done = e === "reset" ? t.login.resetDone : null;
   const field =
     "mt-2 h-13 w-full rounded-field border border-d-line bg-d-card px-4 text-base outline-none focus:border-d-teal";
   return (
@@ -26,6 +28,11 @@ export default async function LoginPage({ searchParams }: PageProps<"/dashboard/
               {error}
             </p>
           )}
+          {done && (
+            <p role="status" className="mb-5 rounded-field border border-d-teal px-4 py-3 text-sm text-d-teal">
+              {done}
+            </p>
+          )}
           <label className="block text-sm font-medium">
             {t.login.email}
             <input name="email" type="email" required autoComplete="email" dir="ltr" placeholder="name@example.com" className={field} />
@@ -34,6 +41,9 @@ export default async function LoginPage({ searchParams }: PageProps<"/dashboard/
             {t.login.password}
             <input name="password" type="password" required autoComplete="current-password" dir="ltr" className={field} />
           </label>
+          <Link href="/dashboard/forgot" className="mt-3 self-start text-sm font-medium text-d-teal hover:underline">
+            {t.login.forgot}
+          </Link>
           <button
             type="submit"
             className="mt-7 h-13.5 w-full rounded-full bg-lime text-[17px] font-bold text-ink shadow-glow transition-transform hover:-translate-y-0.5"

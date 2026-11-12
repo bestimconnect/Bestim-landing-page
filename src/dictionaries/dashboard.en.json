@@ -24,11 +24,31 @@
     "password": "Password",
     "submit": "Sign in",
     "invalid": "Wrong email or password.",
+    "forgot": "Forgot your password?",
+    "resetDone": "Password changed. Sign in with the new one.",
     "notAdmin": "This account is not allowed into the dashboard.",
     "panelTitle": "Everything in Bestim,",
     "panelAccent": "at your fingertips.",
     "panelText": "Users, cars, records and AI usage in one place.",
     "auditNote": "Opening any user's page is written to the audit log."
+  },
+  "forgot": {
+    "title": "Reset your password",
+    "hint": "Enter your account email. We'll send a link to choose a new password.",
+    "email": "Email",
+    "submit": "Send reset link",
+    "sent": "If that email has an account, a reset link is on its way. Open it in this same browser.",
+    "back": "Back to sign in"
+  },
+  "reset": {
+    "title": "Choose a new password",
+    "password": "New password (at least 8 characters)",
+    "confirm": "Repeat the new password",
+    "submit": "Save password",
+    "short": "The password must be at least 8 characters.",
+    "mismatch": "The two passwords don't match.",
+    "expired": "This link has expired or was opened in a different browser. Request a new one and open it in the same browser.",
+    "again": "Request a new link"
   },
   "overview": {
     "title": "Overview",
