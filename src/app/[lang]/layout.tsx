@@ -1,24 +1,12 @@
 import type { Metadata } from "next";
-import { Poppins, Tajawal } from "next/font/google";
 import { notFound } from "next/navigation";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { MotionProvider } from "@/components/Motion";
+import { poppins, tajawal } from "@/lib/fonts";
 import { dirOf, getDictionary, hasLocale, locales } from "@/lib/i18n";
 import { site } from "@/lib/site";
 import "../globals.css";
-
-// The font stack itself is in globals.css (--font-sans); these calls load the files.
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
-});
-const tajawal = Tajawal({
-  subsets: ["arabic"],
-  weight: ["400", "500", "700", "800"],
-  variable: "--font-tajawal",
-});
 
 // Only /ar and /en exist, and both are built ahead of time.
 export const dynamicParams = false;

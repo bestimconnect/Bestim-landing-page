@@ -7,6 +7,7 @@ import { Faq } from "@/components/sections/Faq";
 import { Features } from "@/components/sections/Features";
 import { Hero } from "@/components/sections/Hero";
 import { HowItWorks } from "@/components/sections/HowItWorks";
+import { Plans } from "@/components/sections/Plans";
 import { Trust } from "@/components/sections/Trust";
 import { VehicleStrip } from "@/components/sections/VehicleStrip";
 import { alternates, getDictionary, hasLocale } from "@/lib/i18n";
@@ -28,6 +29,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <HowItWorks lang={lang} dict={dict} />
       <Bento lang={lang} dict={dict} />
       <Trust lang={lang} dict={dict} />
+      <Plans lang={lang} dict={dict} />
       <Connect lang={lang} dict={dict} />
       <Faq dict={dict} />
       <DownloadBand lang={lang} dict={dict} />

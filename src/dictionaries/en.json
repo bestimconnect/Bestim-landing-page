@@ -9,7 +9,8 @@
     "business": "For business",
     "faq": "FAQ",
     "download": "Get the app",
-    "home": "Bestim, home page"
+    "home": "Bestim, home page",
+    "plans": "Plans"
   },
   "store": {
     "soon": "Coming soon",
@@ -167,6 +168,36 @@
     "chipTitle": "Its history goes with it",
     "chipSub": "12 maintenance records · 5 reminders"
   },
+  "plans": {
+    "eyebrow": "Plans",
+    "title1": "Start free.",
+    "title2": "Grow when your garage does.",
+    "body": "Every plan keeps your maintenance history safe. Pick the one that fits your cars.",
+    "free": "Free",
+    "perMonth": "EGP / month",
+    "perYear": "EGP / year",
+    "popular": "Most popular",
+    "everything": "Everything in {plan}, plus",
+    "includes": "What's included",
+    "unlimited": "Unlimited",
+    "note": "Your history stays yours on every plan.",
+    "limit": {
+      "max_cars": "Cars",
+      "max_logs": "Records",
+      "voice_per_day": "Voice records per day",
+      "scans_per_day": "Odometer scans per day"
+    },
+    "feature": {
+      "receipt_photos": "Receipt photos",
+      "share_history": "Share your car's history",
+      "export": "Export records",
+      "widgets": "Home screen widgets"
+    },
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save": "Save {n}%",
+    "same": "Same features as {plan}"
+  },
   "connect": {
     "title1": "Run a workshop or a fleet?",
     "title2": "Bestim Connect is for you.",
@@ -236,6 +267,7 @@
     "support": "Support",
     "deleteAccount": "Delete account and data",
     "rights": "All rights reserved",
-    "updated": "Last updated"
+    "updated": "Last updated",
+    "about": "About Bestim"
   }
 }

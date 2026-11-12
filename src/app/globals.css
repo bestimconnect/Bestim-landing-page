@@ -86,3 +86,40 @@ body {
     animation: none;
   }
 }
+
+/* ─── Dashboard (/dashboard) ───
+   Same brand as the app. Depth: paper (page) < card < panel (sidebar). */
+@theme inline {
+  --color-d-paper: var(--d-paper);
+  --color-d-card: var(--d-card);
+  --color-d-ink: var(--d-ink);
+  --color-d-muted: var(--d-muted);
+  --color-d-line: var(--d-line);
+  --color-d-panel: var(--d-panel);
+  --color-d-teal: var(--d-teal);
+  --color-d-danger: var(--d-danger);
+  --color-d-mint: var(--d-mint);
+  --color-d-sky: var(--d-sky);
+  --color-d-amber: var(--d-amber);
+  --color-d-blush: var(--d-blush);
+}
+.dash {
+  color-scheme: light; /* the admin portal is light only (founder, 2026-10-22) */
+  --d-paper: #f5f7f5;
+  --d-card: #ffffff;
+  --d-ink: #222e29;
+  --d-muted: #5b6860;
+  --d-line: #dee5df;
+  --d-panel: #222e29;
+  --d-teal: #08736f;
+  --d-danger: #ac2846;
+  /* Tinted tiles (same pastels as the brand mint / sky / amber / blush). */
+  --d-mint: #e4f3d9;
+  --d-sky: #ddebff;
+  --d-amber: #fff0ce;
+  --d-blush: #ffe5eb;
+}
+.dash body, body.dash {
+  background: var(--d-paper);
+  color: var(--d-ink);
+}
