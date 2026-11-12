@@ -22,6 +22,7 @@ export function Footer({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         [`/${lang}/terms`, t.terms],
         [`/${lang}/support`, t.support],
         [`/${lang}/delete-account`, t.deleteAccount],
+        [`/${lang}/about`, t.about],
       ],
     },
   ];

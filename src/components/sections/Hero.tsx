@@ -49,7 +49,7 @@ export function Hero({ lang, dict }: { lang: Locale; dict: Dictionary }) {
         <StoreBadges dict={dict} className="mt-8 justify-center" />
       </div>
 
-      {/* Three phones, fanned: the vehicle dashboard in front, expenses and the voice step behind.
+      {/* Three phones, fanned: the home screen in front, expenses and the parts grid behind.
           Positions use start/end and the tilt flips with rtl:, so the fan mirrors in Arabic. */}
       <div className="relative isolate mx-auto mt-12 w-fit">
         <Parallax distance={-24} className="absolute top-14 -start-44 -z-10 hidden md:block">
@@ -60,15 +60,15 @@ export function Hero({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           />
         </Parallax>
         <Parallax distance={-24} className="absolute top-14 -end-44 -z-10 hidden md:block">
-          {/* Arabic has no "listening" capture (no Arabic recognition in the simulator), so it shows the review step. */}
+          {/* Founder's pick (2026-11-02): the parts grid, same in both languages. */}
           <Phone
-            src={screen(lang, lang === "ar" ? "review" : "voice")}
+            src={screen(lang, "reminders")}
             priority
             className="w-64 rotate-8 animate-rise [animation-delay:400ms] rtl:-rotate-8"
           />
         </Parallax>
         <Phone
-          src={screen(lang, "vehicles")}
+          src={screen(lang, "home")}
           alt={t.phoneAlt}
           priority
           className="w-72 animate-rise [animation-delay:150ms] md:w-[22rem]"

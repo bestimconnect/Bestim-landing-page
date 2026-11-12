@@ -10,5 +10,6 @@ Read `../CLAUDE.md` first (shared briefing), then `README.md` here (where things
 - Server Components by default. `"use client"` only for motion (`components/Motion.tsx`, `sections/HowItWorks.tsx`) and `LangSwitch`.
 - Above-the-fold content animates with CSS (`animate-rise`), not `Reveal`, so it shows before JavaScript loads.
 - Links, domain, store URLs: `src/lib/site.ts` only.
-- No price or plan mentions anywhere (founder decision, 2026-10-02). No invented testimonials.
+- `/dashboard` is the private admin dashboard (own root layout, code in `src/dashboard/`, strings in `src/dictionaries/dashboard.{ar,en}.json`, gate in `src/proxy.ts`). It may use client JS where needed and its own `d-*` colour tokens (light only). Everything it reads goes through admin-only database functions; never put a service key in this project.
+- Plan cards (`#plans`) are allowed since 2026-11-03 (founder, Q121) and read the `plans` table, so the dashboard controls them. A paid plan with no price says "Coming soon". No other price mentions. No invented testimonials.
 - Run `npm run check && npm run lint && npm run build` before calling a task done.
