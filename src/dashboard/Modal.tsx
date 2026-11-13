@@ -18,7 +18,7 @@ export function Modal({ title, closeHref, closeLabel, children, drawer }: { titl
       ref={ref}
       onClose={() => router.replace(closeHref)}
       onClick={(e) => e.target === e.currentTarget && ref.current?.close()}
-      className={`${drawer ? "m-0 ms-auto h-dvh max-h-dvh w-[min(36rem,100vw)] rounded-none rounded-s-[28px]" : "m-auto max-h-[calc(100dvh-2rem)] w-[min(34rem,calc(100vw-2rem))] rounded-[28px]"} overflow-y-auto border-0 bg-d-card p-0 text-d-ink shadow-[0_24px_48px_-16px_rgb(34_46_41/0.28)] backdrop:bg-d-panel/55`}
+      className={`${drawer ? "m-0 ms-auto h-[125dvh] max-h-[125dvh] w-[min(36rem,125vw)] rounded-none rounded-s-[28px]" : "m-auto max-h-[calc(125dvh-2rem)] w-[min(34rem,calc(125vw-2rem))] rounded-[28px]"} overflow-y-auto border-0 bg-d-card p-0 text-d-ink shadow-[0_24px_48px_-16px_rgb(34_46_41/0.28)] backdrop:bg-d-panel/55`}
     >
       <div className="p-6 md:p-7">
         <div className="mb-4 flex items-center justify-between gap-3">

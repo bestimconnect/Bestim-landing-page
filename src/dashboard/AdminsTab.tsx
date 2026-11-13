@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, ShieldCheck, UserMinus } from "lucide-react";
 import Link from "next/link";
 import { link, one } from "./catalog";
 import { fmtDate, type DashDict, type DashLang } from "./i18n";
@@ -6,11 +6,11 @@ import { Modal } from "./Modal";
 import type { AdminRow, UserRow } from "./types";
 import { createUser, removeAdmin, setAdminRole } from "./user-actions";
 import { RoleFields } from "./UsersTab";
-import { Avatar, btnLime, btnSmall, Chip, Field, input, Table, td, th, tint } from "./ui";
+import { ActionsTd, ActionsTh, Avatar, btnLime, btnSmall, Chip, Field, iconBtn, input, Table, td, th, tint } from "./ui";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 const PATH = "/dashboard/users";
-const act = "me-2 inline-flex h-8 items-center rounded-full border border-d-line bg-d-card px-3.5 text-xs font-semibold hover:bg-d-paper";
+const ic = { size: 16, strokeWidth: 1.9, "aria-hidden": true } as const;
 
 export async function AdminsTab({ sp, role, me, t, lang, supabase }: {
   sp: Record<string, string | string[] | undefined>; role: string; me: string; t: DashDict; lang: DashLang; supabase: SupabaseClient;
@@ -38,8 +38,11 @@ export async function AdminsTab({ sp, role, me, t, lang, supabase }: {
 
   return (
     <>
-      <div className="mb-5 flex flex-wrap items-center gap-3">
-        {isOwner ? <Link href={open("admin-new")} className={`${btnLime} inline-flex items-center`}>{u.addAdmin}</Link> : <p className="text-sm text-d-muted">{u.ownerOnly}</p>}
+      <div className="mb-5 flex items-center gap-3 rtl:flex-row-reverse">
+        {!isOwner && <p className="min-w-0 text-sm text-d-muted">{u.ownerOnly}</p>}
+        <div className="ms-auto flex shrink-0 items-center gap-2">
+          {isOwner && <Link href={open("admin-new")} className={`${btnLime} inline-flex items-center whitespace-nowrap`}>{u.addAdmin}</Link>}
+        </div>
       </div>
       {one(sp.saved) && <p role="status" className="mb-5 rounded-2xl bg-d-mint px-4 py-3 text-sm font-semibold">{u.saved}</p>}
       {err && <p role="alert" className="mb-5 rounded-2xl bg-d-blush px-4 py-3 text-sm font-semibold text-d-danger">{errs[err] ?? errs.save}</p>}
@@ -47,7 +50,7 @@ export async function AdminsTab({ sp, role, me, t, lang, supabase }: {
       {rows.length === 0 ? (
         <p className="text-d-muted">{u.empty}</p>
       ) : (
-        <Table>
+        <Table height="h-[calc(125dvh-24rem)] min-h-80">
           <thead>
             <tr>
               <th className={th}>{u.name}</th>
@@ -56,12 +59,12 @@ export async function AdminsTab({ sp, role, me, t, lang, supabase }: {
               <th className={th}>{u.team}</th>
               <th className={th}>{u.since}</th>
               <th className={th}>{u.lastSeen}</th>
-              {isOwner && <th className={th}>{u.actions}</th>}
+              {isOwner && <ActionsTh label={u.actions} />}
             </tr>
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={r.user_id}>
+              <tr key={r.user_id} className="group/row hover:bg-d-paper">
                 <td className={td}>
                   <span className="flex items-center gap-3 font-semibold">
                     <Avatar text={r.full_name || r.email || "?"} className={`size-9 text-sm text-ink ${tint(i)}`} />
@@ -75,10 +78,10 @@ export async function AdminsTab({ sp, role, me, t, lang, supabase }: {
                 <td className={td}>{fmtDate(lang, r.created_at)}</td>
                 <td className={td}>{fmtDate(lang, r.last_sign_in_at)}</td>
                 {isOwner && (
-                  <td className={td}>
-                    <Link href={open("admin-role", r.user_id)} className={act}>{u.changeRole}</Link>
-                    <Link href={open("admin-remove", r.user_id)} className={`${act} text-d-danger`}>{u.removeAdmin}</Link>
-                  </td>
+                  <ActionsTd>
+                    <Link href={open("admin-role", r.user_id)} className={iconBtn} title={u.changeRole} aria-label={u.changeRole}><ShieldCheck {...ic} /></Link>
+                    <Link href={open("admin-remove", r.user_id)} className={`${iconBtn} hover:!text-d-danger`} title={u.removeAdmin} aria-label={u.removeAdmin}><UserMinus {...ic} /></Link>
+                  </ActionsTd>
                 )}
               </tr>
             ))}
