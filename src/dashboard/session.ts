@@ -10,5 +10,5 @@ export const requireAdmin = cache(async () => {
   if (!data?.claims) redirect("/dashboard/login");
   const { data: role } = await supabase.rpc("admin_role");
   if (!role) redirect("/dashboard/login?e=notAdmin");
-  return { supabase, role: role as string, email: (data.claims.email as string | undefined) ?? "" };
+  return { supabase, role: role as string, id: data.claims.sub as string, email: (data.claims.email as string | undefined) ?? "" };
 });

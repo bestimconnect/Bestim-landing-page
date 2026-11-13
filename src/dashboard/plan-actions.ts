@@ -136,15 +136,17 @@ export async function setUserPlan(f: FormData) {
   const { supabase, role } = await requireAdmin();
   const user = str(f, "user");
   if (!UUID.test(user)) redirect("/dashboard/users");
-  const back = `/dashboard/users/${user}`;
+  const here = String(f.get("here") ?? "");
+  const back = /^\/dashboard\/users(\?[\w=&%.+-]*)?$/.test(here) ? here : `/dashboard/users/${user}`; // the users table sends its own address
+  const sep = back.includes("?") ? "&" : "?";
   const plan = str(f, "plan");
   const day = str(f, "expires");
-  if (!canEditPlans(role) || (plan && !PLAN_ID.test(plan)) || (day && !/^\d{4}-\d{2}-\d{2}$/.test(day))) redirect(`${back}?plan=err`);
+  if (!canEditPlans(role) || (plan && !PLAN_ID.test(plan)) || (day && !/^\d{4}-\d{2}-\d{2}$/.test(day))) redirect(`${back}${sep}plan=err`);
   const { error } = await supabase.rpc("admin_set_user_plan", {
     p_user: user,
     p_plan: plan || null,
     p_expires: plan && day ? `${day}T23:59:59Z` : null,
   });
   revalidatePath("/dashboard", "layout");
-  redirect(`${back}?plan=${error ? "err" : "ok"}`);
+  redirect(`${back}${sep}plan=${error ? "err" : "ok"}`);
 }

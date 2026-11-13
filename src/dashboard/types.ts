@@ -23,7 +23,20 @@ export type UserRow = {
   last_sign_in_at: string | null;
   vehicles: number;
   logs: number;
+  plan_id: string | null;
+  suspended: boolean;
+  admin_role: string | null;
   total: number;
+};
+
+export type AdminRow = {
+  user_id: string;
+  email: string | null;
+  full_name: string;
+  role: string;
+  team_name: string | null;
+  created_at: string;
+  last_sign_in_at: string | null;
 };
 
 export type UserDetail = {
