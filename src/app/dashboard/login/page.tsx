@@ -13,7 +13,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/dashboard/
   const field =
     "mt-2 h-13 w-full rounded-field border border-d-line bg-d-card px-4 text-base outline-none focus:border-d-teal";
   return (
-    <main className="flex min-h-dvh gap-4 p-4">
+    <main className="flex min-h-[125dvh] gap-4 p-4">
       <div className="flex min-w-0 flex-1 flex-col lg:flex-none lg:basis-[calc(50%-0.5rem)] px-2 py-4 md:px-10 lg:px-14">
         <div className="flex items-center justify-between">
           <Image src="/brand/logo-word.png" alt="Bestim" width={900} height={194} priority className="h-7 w-auto" />

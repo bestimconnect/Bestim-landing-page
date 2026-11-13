@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { CirclePause, CirclePlay, Pencil, Search, ShieldPlus, Trash2, WalletCards } from "lucide-react";
 import Link from "next/link";
 import { link, one } from "./catalog";
 import { fmtDate, fmtNum, type DashDict, type DashLang } from "./i18n";
@@ -6,12 +6,12 @@ import { Modal } from "./Modal";
 import { setUserPlan } from "./plan-actions";
 import type { Plan, UserRow } from "./types";
 import { createUser, deleteUser, setAdminRole, suspendUser, updateUser } from "./user-actions";
-import { Avatar, btnLime, btnSmall, Chip, Field, input, Table, td, th, tint } from "./ui";
+import { ActionsTd, ActionsTh, Avatar, btnLime, btnSmall, Chip, Field, iconBtn, input, Table, td, th, tint } from "./ui";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 const PATH = "/dashboard/users";
 const PAGE = 25;
-const act = "me-2 inline-flex h-8 items-center rounded-full border border-d-line bg-d-card px-3.5 text-xs font-semibold hover:bg-d-paper";
+const ic = { size: 16, strokeWidth: 1.9, "aria-hidden": true } as const;
 
 export const TEAMS = ["Shady", "Ahmed", "Daytwo"];
 
@@ -47,16 +47,19 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
 
   return (
     <>
-      <div className="mb-5 flex flex-wrap items-center gap-3">
+      {/* One row: search on the left, buttons on the right (rtl:flex-row-reverse keeps that order in Arabic too). */}
+      <div className="mb-5 flex items-center gap-3 rtl:flex-row-reverse">
         <form className="flex min-w-0 flex-1 gap-2 sm:max-w-xl" role="search">
           <input type="hidden" name="tab" value="users" />
           <label className="flex h-12 min-w-0 flex-1 items-center gap-2.5 rounded-full border border-d-line bg-d-card px-5 text-d-muted focus-within:border-d-teal">
             <Search size={18} strokeWidth={1.9} aria-hidden="true" className="shrink-0" />
             <input name="q" defaultValue={q} placeholder={u.placeholder} aria-label={u.placeholder} className="min-w-0 flex-1 bg-transparent text-d-ink outline-none placeholder:text-d-muted" />
           </label>
-          <button type="submit" className="h-12 rounded-full bg-lime px-6 font-semibold text-ink shadow-glow">{u.search}</button>
+          <button type="submit" className="h-12 shrink-0 rounded-full bg-lime px-6 font-semibold text-ink shadow-glow">{u.search}</button>
         </form>
-        {canManage && <Link href={open("user-new")} className={`${btnLime} inline-flex items-center`}>{u.new}</Link>}
+        <div className="ms-auto flex shrink-0 items-center gap-2">
+          {canManage && <Link href={open("user-new")} className={`${btnLime} inline-flex items-center whitespace-nowrap`}>{u.new}</Link>}
+        </div>
       </div>
 
       {one(sp.saved) && <p role="status" className="mb-5 rounded-2xl bg-d-mint px-4 py-3 text-sm font-semibold">{u.saved}</p>}
@@ -67,7 +70,7 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
       {rows.length === 0 ? (
         <p className="text-d-muted">{u.empty}</p>
       ) : (
-        <Table>
+        <Table height="h-[calc(125dvh-24rem)] min-h-80">
           <thead>
             <tr>
               <th className={th}>{u.name}</th>
@@ -78,12 +81,12 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
               <th className={th}>{u.records}</th>
               <th className={th}>{u.lastSeen}</th>
               <th className={th}>{u.joined}</th>
-              {canManage && <th className={th}>{u.actions}</th>}
+              {canManage && <ActionsTh label={u.actions} />}
             </tr>
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={r.id}>
+              <tr key={r.id} className="group/row hover:bg-d-paper">
                 <td className={td}>
                   <Link href={`/dashboard/users/${r.id}`} className="flex items-center gap-3 font-semibold hover:underline">
                     <Avatar text={r.full_name || r.email || "?"} className={`size-9 text-sm text-ink ${tint(i)}`} />
@@ -101,20 +104,22 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
                 <td className={td}>{fmtDate(lang, r.last_sign_in_at)}</td>
                 <td className={td}>{fmtDate(lang, r.created_at)}</td>
                 {canManage && (
-                  <td className={td}>
-                    <Link href={open("user-edit", r.id)} className={act}>{u.edit}</Link>
-                    <Link href={open("user-plan", r.id)} className={act}>{u.changePlan}</Link>
+                  <ActionsTd>
+                    <Link href={open("user-edit", r.id)} className={iconBtn} title={u.edit} aria-label={u.edit}><Pencil {...ic} /></Link>
+                    <Link href={open("user-plan", r.id)} className={iconBtn} title={u.changePlan} aria-label={u.changePlan}><WalletCards {...ic} /></Link>
                     {r.id !== me && !r.admin_role && (
-                      <form action={suspendUser} className="inline">
+                      <form action={suspendUser} className="inline-flex">
                         <input type="hidden" name="here" value={here} />
                         <input type="hidden" name="id" value={r.id} />
                         <input type="hidden" name="to" value={r.suspended ? "0" : "1"} />
-                        <button type="submit" className={act}>{r.suspended ? u.resume : u.suspend}</button>
+                        <button type="submit" className={iconBtn} title={r.suspended ? u.resume : u.suspend} aria-label={r.suspended ? u.resume : u.suspend}>
+                          {r.suspended ? <CirclePlay {...ic} /> : <CirclePause {...ic} />}
+                        </button>
                       </form>
                     )}
-                    {isOwner && !r.admin_role && <Link href={open("user-admin", r.id)} className={act}>{u.makeAdmin}</Link>}
-                    {isOwner && r.id !== me && !r.admin_role && <Link href={open("user-delete", r.id)} className={`${act} text-d-danger`}>{u.delete}</Link>}
-                  </td>
+                    {isOwner && !r.admin_role && <Link href={open("user-admin", r.id)} className={iconBtn} title={u.makeAdmin} aria-label={u.makeAdmin}><ShieldPlus {...ic} /></Link>}
+                    {isOwner && r.id !== me && !r.admin_role && <Link href={open("user-delete", r.id)} className={`${iconBtn} hover:!text-d-danger`} title={u.delete} aria-label={u.delete}><Trash2 {...ic} /></Link>}
+                  </ActionsTd>
                 )}
               </tr>
             ))}

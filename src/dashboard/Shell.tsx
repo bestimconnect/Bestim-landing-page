@@ -38,10 +38,10 @@ export async function Shell({ email, role, children }: { email: string; role: st
   const row =
     "flex w-full items-center gap-3 rounded-full px-4 py-2.5 text-sm text-[#c9d3cd] transition-colors hover:bg-white/10 hover:text-white md:group-data-[collapsed=true]:justify-center md:group-data-[collapsed=true]:px-0";
   return (
-    <div className="min-h-dvh md:flex">
+    <div className="min-h-[125dvh] md:flex">
       <aside
         data-collapsed={collapsed}
-        className="group flex shrink-0 flex-col gap-3 bg-d-panel p-4 text-[#f5f7f5] transition-[width] duration-200 md:sticky md:top-0 md:h-dvh md:w-65 md:gap-6 md:overflow-y-auto md:px-5 md:py-7 md:data-[collapsed=true]:w-21 md:data-[collapsed=true]:px-3"
+        className="group flex shrink-0 flex-col gap-3 bg-d-panel p-4 text-[#f5f7f5] transition-[width] duration-200 md:sticky md:top-0 md:h-[125dvh] md:w-65 md:gap-6 md:overflow-y-auto md:px-5 md:py-7 md:data-[collapsed=true]:w-21 md:data-[collapsed=true]:px-3"
       >
         <div className="flex items-center justify-between gap-2 md:group-data-[collapsed=true]:flex-col md:group-data-[collapsed=true]:gap-4">
           <Image src="/brand/logo-word-inverse.png" alt="Bestim" width={900} height={198} priority className={`h-6 w-auto md:ms-2 md:h-7 ${hideWhenCollapsed}`} />

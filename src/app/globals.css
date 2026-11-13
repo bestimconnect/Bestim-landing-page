@@ -122,4 +122,5 @@ body {
 .dash body, body.dash {
   background: var(--d-paper);
   color: var(--d-ink);
+  zoom: 0.8; /* the whole dashboard at 80% (founder, 2026-11-13) */
 }

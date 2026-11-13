@@ -52,15 +52,16 @@ export const Avatar = ({ text, className }: { text: string; className: string })
 );
 
 // Tables scroll sideways on phones instead of squeezing.
-export const Table = ({ children, title }: { children: ReactNode; title?: string }) => (
+// `height` gives it a fixed height: the rows scroll inside it and the header stays put.
+export const Table = ({ children, title, height }: { children: ReactNode; title?: string; height?: string }) => (
   <div className="overflow-hidden rounded-metric border border-d-line bg-d-card shadow-card">
     {title && <h2 className="px-5 pb-3 pt-5 text-lg font-bold">{title}</h2>}
-    <div className="overflow-x-auto">
+    <div className={height ? `overflow-auto ${height}` : "overflow-x-auto"}>
       <table className="w-full text-start text-sm">{children}</table>
     </div>
   </div>
 );
-export const th = "whitespace-nowrap bg-d-paper px-5 py-3.5 text-start text-[13px] font-semibold text-d-muted";
+export const th = "sticky top-0 z-20 whitespace-nowrap bg-d-paper px-5 py-3.5 text-start text-[13px] font-semibold text-d-muted";
 export const td = "whitespace-nowrap border-t border-d-line px-5 py-3.5";
 
 // Switches Arabic <-> English without any JavaScript (a form + a server action).
@@ -188,4 +189,18 @@ export const VisibleBox = ({ on, label }: { on: boolean; label: string }) => (
     {label}
     <input type="checkbox" name="is_active" defaultChecked={on} className="size-5 accent-d-teal" />
   </label>
+);
+
+// Row actions as icons: a floating pill pinned to the end of the row, visible while the row is hovered or focused
+// (always visible on touch screens). The row needs className="group/row".
+export const iconBtn = "inline-flex size-8 items-center justify-center rounded-full text-d-muted hover:bg-d-paper hover:text-d-ink";
+export const ActionsTh = ({ label }: { label: string }) => (
+  <th className={`${th} end-0 w-0 !bg-transparent p-0`}><span className="sr-only">{label}</span></th>
+);
+export const ActionsTd = ({ children }: { children: ReactNode }) => (
+  <td className="sticky end-0 w-0 border-t border-d-line p-0">
+    <div className="pointer-events-none absolute end-2 top-1/2 z-10 flex -translate-y-1/2 items-center gap-0.5 rounded-full border border-d-line bg-d-card p-1 opacity-0 shadow-card transition-opacity focus-within:pointer-events-auto focus-within:opacity-100 group-hover/row:pointer-events-auto group-hover/row:opacity-100 [@media(hover:none)]:pointer-events-auto [@media(hover:none)]:opacity-100">
+      {children}
+    </div>
+  </td>
 );
