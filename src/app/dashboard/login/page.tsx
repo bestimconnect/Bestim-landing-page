@@ -1,9 +1,9 @@
 import { ShieldCheck } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { signIn } from "@/dashboard/actions";
 import { getDash } from "@/dashboard/i18n";
-import { LangToggle } from "@/dashboard/ui";
+import { PendingLink, SubmitButton } from "@/dashboard/Pending";
+import { Flash, LangToggle } from "@/dashboard/ui";
 
 export default async function LoginPage({ searchParams }: PageProps<"/dashboard/login">) {
   const { t, lang } = await getDash();
@@ -23,16 +23,8 @@ export default async function LoginPage({ searchParams }: PageProps<"/dashboard/
         <form action={signIn} className="mx-auto flex w-full max-w-105 flex-1 flex-col justify-center py-10">
           <h1 className="text-3xl font-extrabold leading-snug md:text-[34px]">{t.login.title}</h1>
           <p className="mb-8 mt-2 text-d-muted">{t.login.hint}</p>
-          {error && (
-            <p role="alert" className="mb-5 rounded-field border border-d-danger px-4 py-3 text-sm text-d-danger">
-              {error}
-            </p>
-          )}
-          {done && (
-            <p role="status" className="mb-5 rounded-field border border-d-teal px-4 py-3 text-sm text-d-teal">
-              {done}
-            </p>
-          )}
+          {error && <Flash tone="err">{error}</Flash>}
+          {done && <Flash>{done}</Flash>}
           <label className="block text-sm font-medium">
             {t.login.email}
             <input name="email" type="email" required autoComplete="email" dir="ltr" placeholder="name@example.com" className={field} />
@@ -41,15 +33,14 @@ export default async function LoginPage({ searchParams }: PageProps<"/dashboard/
             {t.login.password}
             <input name="password" type="password" required autoComplete="current-password" dir="ltr" className={field} />
           </label>
-          <Link href="/dashboard/forgot" className="mt-3 self-start text-sm font-medium text-d-teal hover:underline">
+          <PendingLink href="/dashboard/forgot" className="mt-3 self-start text-sm font-medium text-d-teal hover:underline">
             {t.login.forgot}
-          </Link>
-          <button
-            type="submit"
+          </PendingLink>
+          <SubmitButton
             className="mt-7 h-13.5 w-full rounded-full bg-lime text-[17px] font-bold text-ink shadow-glow transition-transform hover:-translate-y-0.5"
           >
             {t.login.submit}
-          </button>
+          </SubmitButton>
         </form>
 
         <p className="flex items-center justify-center gap-2.5 text-center text-[13px] text-d-muted">

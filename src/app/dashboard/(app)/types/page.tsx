@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { canEdit, link, one, type VType } from "@/dashboard/catalog";
 import { saveType } from "@/dashboard/catalog-actions";
 import { fmtNum, getDash } from "@/dashboard/i18n";
 import { Modal } from "@/dashboard/Modal";
+import { PendingLink } from "@/dashboard/Pending";
 import { requireAdmin } from "@/dashboard/session";
-import { CatalogForm, Chip, Field, input, PageTitle, Pic, PicField, Switch, VisibleBox } from "@/dashboard/ui";
+import { CatalogForm, Chip, EmptyState, Field, InfoBanner, input, PageTitle, Pic, PicField, Switch, VisibleBox } from "@/dashboard/ui";
 
 const PATH = "/dashboard/types";
 
@@ -25,10 +25,10 @@ export default async function TypesPage({ searchParams }: PageProps<"/dashboard/
   return (
     <>
       <PageTitle sub={`${fmtNum(types.length)} ${t.types.count} · ${t.types.sub}`}>{t.types.title}</PageTitle>
-      <p className="mb-5 rounded-2xl bg-d-sky px-4.5 py-3 text-sm leading-6">{t.types.info}</p>
+      <InfoBanner>{t.types.info}</InfoBanner>
 
       {types.length === 0 ? (
-        <p className="text-d-muted">{t.types.empty}</p>
+        <EmptyState>{t.types.empty}</EmptyState>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {types.map((v) => (
@@ -47,12 +47,12 @@ export default async function TypesPage({ searchParams }: PageProps<"/dashboard/
                 <Chip tone="mint">{fmtNum(Number(usage.get(v.id)?.models ?? 0))} {t.types.models}</Chip>
                 <Chip tone="amber">{fmtNum(Number(usage.get(v.id)?.vehicles ?? 0))} {t.types.cars}</Chip>
               </div>
-              <Link
+              <PendingLink
                 href={link(PATH, { modal: "type-edit", id: v.id })}
                 className="mt-3.5 flex h-10.5 items-center justify-center rounded-full bg-d-panel text-sm font-semibold text-[#f5f7f5]"
               >
                 {edit ? t.catalog.edit : t.catalog.view}
-              </Link>
+              </PendingLink>
             </article>
           ))}
         </div>

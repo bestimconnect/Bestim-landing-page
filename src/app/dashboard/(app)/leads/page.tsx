@@ -1,7 +1,8 @@
 import { Phone } from "lucide-react";
 import { fmtDate, fmtNum, getDash } from "@/dashboard/i18n";
 import { requireAdmin } from "@/dashboard/session";
-import { Chip, PageTitle } from "@/dashboard/ui";
+import { Pager, pageOf, sizeOf } from "@/dashboard/pager";
+import { Chip, EmptyState, PageTitle, Table, td, th } from "@/dashboard/ui";
 
 type Lead = {
   id: string;
@@ -14,44 +15,51 @@ type Lead = {
   note: string | null;
 };
 
-export default async function LeadsPage() {
+export default async function LeadsPage({ searchParams }: PageProps<"/dashboard/leads">) {
   const { supabase } = await requireAdmin();
   const { t, lang } = await getDash();
-  const { data } = await supabase.from("connect_leads").select("*").order("created_at", { ascending: false }).limit(200);
+  const sp = await searchParams;
+  const page = pageOf(sp.page);
+  const size = sizeOf(sp.size);
+  const { data, count } = await supabase
+    .from("connect_leads")
+    .select("*", { count: "exact" })
+    .order("created_at", { ascending: false })
+    .range((page - 1) * size, page * size - 1);
   const rows = (data ?? []) as Lead[];
+  const total = count ?? rows.length;
 
   return (
     <>
-      <PageTitle sub={`${t.leads.total}: ${fmtNum(rows.length)}`}>{t.leads.title}</PageTitle>
+      <PageTitle sub={`${t.leads.total}: ${fmtNum(total)}`}>{t.leads.title}</PageTitle>
       {rows.length === 0 ? (
-        <p className="text-d-muted">{t.leads.empty}</p>
+        <EmptyState>{t.leads.empty}</EmptyState>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-2">
-          {rows.map((l) => (
-            <article key={l.id} className="flex flex-col gap-3.5 rounded-3xl border border-d-line bg-d-card p-6 shadow-card">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-2">
-                  <Chip tone={l.kind === "fleet" ? "sky" : "amber"}>{l.kind === "fleet" ? t.leads.fleetKind : t.leads.workshopKind}</Chip>
-                  <Chip>{t.leads.fleet}: <bdi>{l.fleet_size}</bdi></Chip>
-                </div>
-                <span className="text-[13px] text-d-muted">{fmtDate(lang, l.created_at, true)}</span>
-              </div>
-              <div>
-                <p className="text-xl font-extrabold">{l.name}</p>
-                <p className="text-d-muted">{l.company}</p>
-              </div>
-              {l.note && <p className="whitespace-pre-wrap rounded-2xl bg-d-paper px-4 py-3.5 leading-6">{l.note}</p>}
-              <a
-                href={`tel:${l.phone.replace(/\s/g, "")}`}
-                className="mt-1 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-lime font-bold text-ink"
-              >
-                <Phone size={18} strokeWidth={1.9} aria-hidden="true" />
-                {t.leads.call}
-                <span dir="ltr" className="font-medium">{l.phone}</span>
-              </a>
-            </article>
-          ))}
-        </div>
+        <Table footer={<Pager size={size} page={page} total={total} base="/dashboard/leads" />}>
+          <thead>
+            <tr>
+              {[t.leads.date, t.leads.name, t.leads.company, t.leads.kind, t.leads.fleet, t.leads.note, t.leads.phone].map((h) => <th key={h} className={th}>{h}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((l) => (
+              <tr key={l.id} className="hover:bg-d-paper">
+                <td className={td}>{fmtDate(lang, l.created_at, true)}</td>
+                <td className={`${td} font-semibold`}>{l.name}</td>
+                <td className={td}>{l.company}</td>
+                <td className={td}><Chip tone={l.kind === "fleet" ? "sky" : "amber"}>{l.kind === "fleet" ? t.leads.fleetKind : t.leads.workshopKind}</Chip></td>
+                <td className={td}><bdi>{l.fleet_size}</bdi></td>
+                <td className={`${td} max-w-72 !whitespace-pre-wrap`}>{l.note ?? "—"}</td>
+                <td className={td}>
+                  <a href={`tel:${l.phone.replace(/\s/g, "")}`} className="inline-flex items-center gap-2 font-semibold text-d-teal underline-offset-4 hover:underline">
+                    <Phone size={16} strokeWidth={1.9} aria-hidden="true" />
+                    <span dir="ltr">{l.phone}</span>
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       )}
     </>
   );

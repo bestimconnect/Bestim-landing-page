@@ -1,8 +1,8 @@
 import Image from "next/image";
-import Link from "next/link";
 import { setPassword } from "@/dashboard/actions";
 import { getDash } from "@/dashboard/i18n";
-import { LangToggle } from "@/dashboard/ui";
+import { PendingLink, SubmitButton } from "@/dashboard/Pending";
+import { Flash, LangToggle } from "@/dashboard/ui";
 
 export default async function ResetPage({ searchParams }: PageProps<"/dashboard/reset">) {
   const { t, lang } = await getDash();
@@ -18,7 +18,7 @@ export default async function ResetPage({ searchParams }: PageProps<"/dashboard/
       </div>
       <form action={setPassword} className="flex flex-1 flex-col justify-center py-10">
         <h1 className="mb-6 text-3xl font-extrabold leading-snug">{t.reset.title}</h1>
-        {msg && <p role="alert" className="mb-5 rounded-field border border-d-danger px-4 py-3 text-sm text-d-danger">{msg}</p>}
+        {msg && <Flash tone="err">{msg}</Flash>}
         {c && e !== "expired" ? (
           <>
             <input type="hidden" name="code" value={c} />
@@ -30,10 +30,10 @@ export default async function ResetPage({ searchParams }: PageProps<"/dashboard/
               {t.reset.confirm}
               <input name="confirm" type="password" required minLength={8} autoComplete="new-password" dir="ltr" className={field} />
             </label>
-            <button type="submit" className="mt-7 h-13.5 w-full rounded-full bg-lime text-[17px] font-bold text-ink shadow-glow">{t.reset.submit}</button>
+            <SubmitButton className="mt-7 h-13.5 w-full rounded-full bg-lime text-[17px] font-bold text-ink shadow-glow">{t.reset.submit}</SubmitButton>
           </>
         ) : (
-          <Link href="/dashboard/forgot" className="self-start text-sm font-medium text-d-teal hover:underline">{t.reset.again}</Link>
+          <PendingLink href="/dashboard/forgot" className="self-start text-sm font-medium text-d-teal hover:underline">{t.reset.again}</PendingLink>
         )}
       </form>
     </main>

@@ -1,9 +1,10 @@
-import { Activity, Bug, Car, FileText, Languages, Layers, LayoutDashboard, List, ListChecks, LogOut, Mail, Plug, Users, WalletCards, Wrench } from "lucide-react";
+import { Activity, Bug, Car, FileText, Languages, Layers, LayoutDashboard, List, ListChecks, LogOut, Mail, Plug, Sparkles, Users, WalletCards, Wrench } from "lucide-react";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { setLang, signOut } from "./actions";
 import { getDash } from "./i18n";
+import { SubmitButton } from "./Pending";
 import { Nav, type NavItem } from "./Nav";
 import { SidebarToggle } from "./SidebarToggle";
 import { Avatar } from "./ui";
@@ -21,6 +22,7 @@ export async function Shell({ email, role, children }: { email: string; role: st
     { href: "/dashboard/leads", label: t.nav.leads, icon: <Mail {...icon} /> },
     { href: "/dashboard/logs", label: t.nav.logs, icon: <List {...icon} /> },
     { href: "/dashboard/plans", label: t.nav.plans, icon: <WalletCards {...icon} /> },
+    { href: "/dashboard/ai", label: t.nav.ai, icon: <Sparkles {...icon} /> },
     { heading: t.nav.content },
     { href: "/dashboard/cars", label: t.nav.cars, icon: <Car {...icon} /> },
     { href: "/dashboard/parts", label: t.nav.parts, icon: <Wrench {...icon} /> },
@@ -72,16 +74,16 @@ export async function Shell({ email, role, children }: { email: string; role: st
           </div>
           <form action={setLang}>
             <input type="hidden" name="lang" value={otherLang} />
-            <button type="submit" lang={otherLang} title={otherLang === "ar" ? "العربية" : "English"} className={row}>
+            <SubmitButton lang={otherLang} title={otherLang === "ar" ? "العربية" : "English"} className={row}>
               <Languages size={18} strokeWidth={1.8} aria-hidden="true" className="shrink-0" />
               <span className={hideWhenCollapsed}>{otherLang === "ar" ? "العربية" : "English"}</span>
-            </button>
+            </SubmitButton>
           </form>
           <form action={signOut}>
-            <button type="submit" title={t.nav.signOut} className={row}>
+            <SubmitButton title={t.nav.signOut} className={row}>
               <LogOut size={18} strokeWidth={1.8} aria-hidden="true" className="shrink-0 rtl:rotate-180" />
               <span className={hideWhenCollapsed}>{t.nav.signOut}</span>
-            </button>
+            </SubmitButton>
           </form>
         </div>
       </aside>

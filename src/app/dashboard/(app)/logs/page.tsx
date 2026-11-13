@@ -1,7 +1,9 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import { fmtDate, getDash } from "@/dashboard/i18n";
 import { requireAdmin } from "@/dashboard/session";
-import { Chip, PageTitle, Table, td, th } from "@/dashboard/ui";
+import { Pager, pageOf, sizeOf } from "@/dashboard/pager";
+import { PendingLink } from "@/dashboard/Pending";
+import { Chip, EmptyState, PageTitle, TabNav, Table, td, th } from "@/dashboard/ui";
 
 type Audit = { id: number; created_at: string; action: string; target: string | null; detail: { admin_email?: string; name?: string } | null };
 type Ai = { id: number; created_at: string; user_id: string | null; kind: "voice" | "scan"; ok: boolean; ms: number | null };
@@ -9,7 +11,11 @@ type Ai = { id: number; created_at: string; user_id: string | null; kind: "voice
 export default async function LogsPage({ searchParams }: PageProps<"/dashboard/logs">) {
   const { supabase } = await requireAdmin();
   const { t, lang } = await getDash();
-  const tab = (await searchParams).tab === "ai" ? "ai" : "audit";
+  const sp = await searchParams;
+  const tab = sp.tab === "ai" ? "ai" : "audit";
+  const page = pageOf(sp.page);
+  const size = sizeOf(sp.size);
+  const range = [(page - 1) * size, page * size - 1] as const;
 
   const tabs = [
     ["audit", t.logs.audit],
@@ -19,28 +25,19 @@ export default async function LogsPage({ searchParams }: PageProps<"/dashboard/l
   return (
     <>
       <PageTitle>{t.logs.title}</PageTitle>
-      <nav className="mb-5 inline-flex gap-1 rounded-full border border-d-line bg-d-card p-1">
-        {tabs.map(([id, label]) => (
-          <Link
-            key={id}
-            href={`/dashboard/logs?tab=${id}`}
-            aria-current={tab === id ? "page" : undefined}
-            className={`rounded-full px-5 py-2.5 text-sm font-semibold ${
-              tab === id ? "bg-d-panel text-[#f5f7f5]" : "text-d-muted"
-            }`}
-          >
-            {label}
-          </Link>
-        ))}
-      </nav>
+      <TabNav
+        label={t.logs.title}
+        items={tabs.map(([id, label]) => ({ href: `/dashboard/logs?tab=${id}`, label, active: tab === id }))}
+      />
       {tab === "audit" ? <AuditTable /> : <AiTable />}
     </>
   );
 
   async function AuditTable() {
-    const { data } = await supabase.from("admin_audit_log").select("*").order("created_at", { ascending: false }).limit(100);
+    const { data, count } = await supabase.from("admin_audit_log").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(...range);
     const rows = (data ?? []) as Audit[];
-    if (!rows.length) return <p className="text-d-muted">{t.logs.empty}</p>;
+    if (!rows.length && page > 1) redirect(`/dashboard/logs?tab=${tab}`);
+    if (!rows.length) return <EmptyState>{t.logs.empty}</EmptyState>;
     return (
       <>
         <Table>
@@ -57,7 +54,7 @@ export default async function LogsPage({ searchParams }: PageProps<"/dashboard/l
                 </td>
                 <td className={td} dir="ltr">
                   {r.action === "view_user" && r.target ? (
-                    <Link href={`/dashboard/users/${r.target}`} className="font-medium text-d-teal underline-offset-4 hover:underline">{r.target.slice(0, 8)}</Link>
+                    <PendingLink spinner={false} href={`/dashboard/users/${r.target}`} className="font-medium text-d-teal underline-offset-4 hover:underline">{r.target.slice(0, 8)}</PendingLink>
                   ) : r.action.startsWith("catalog_") && r.target ? (
                     <span dir="auto">
                       {(t.logs as Record<string, string>)[`tbl_${r.target.split(":")[0]}`] ?? r.target.split(":")[0]}
@@ -71,15 +68,16 @@ export default async function LogsPage({ searchParams }: PageProps<"/dashboard/l
             ))}
           </tbody>
         </Table>
-        <p className="mt-3 text-[13px] text-d-muted">{t.logs.limitNote}</p>
+        <Pager size={size} page={page} total={count ?? rows.length} base="/dashboard/logs" params={{ tab }} />
       </>
     );
   }
 
   async function AiTable() {
-    const { data } = await supabase.from("ai_usage_log").select("*").order("created_at", { ascending: false }).limit(100);
+    const { data, count } = await supabase.from("ai_usage_log").select("*", { count: "exact" }).order("created_at", { ascending: false }).range(...range);
     const rows = (data ?? []) as Ai[];
-    if (!rows.length) return <p className="text-d-muted">{t.logs.empty}</p>;
+    if (!rows.length && page > 1) redirect(`/dashboard/logs?tab=${tab}`);
+    if (!rows.length) return <EmptyState>{t.logs.empty}</EmptyState>;
     return (
       <>
         <Table>
@@ -92,7 +90,7 @@ export default async function LogsPage({ searchParams }: PageProps<"/dashboard/l
                 <td className={td}>{fmtDate(lang, r.created_at, true)}</td>
                 <td className={td} dir="ltr">
                   {r.user_id ? (
-                    <Link href={`/dashboard/users/${r.user_id}`} className="font-medium text-d-teal underline-offset-4 hover:underline">{r.user_id.slice(0, 8)}</Link>
+                    <PendingLink spinner={false} href={`/dashboard/users/${r.user_id}`} className="font-medium text-d-teal underline-offset-4 hover:underline">{r.user_id.slice(0, 8)}</PendingLink>
                   ) : (
                     "—"
                   )}
@@ -106,7 +104,7 @@ export default async function LogsPage({ searchParams }: PageProps<"/dashboard/l
             ))}
           </tbody>
         </Table>
-        <p className="mt-3 text-[13px] text-d-muted">{t.logs.limitNote}</p>
+        <Pager size={size} page={page} total={count ?? rows.length} base="/dashboard/logs" params={{ tab }} />
       </>
     );
   }

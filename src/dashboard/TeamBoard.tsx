@@ -1,21 +1,22 @@
 import { ChevronDown, MessageSquare, Plus } from "lucide-react";
-import Link from "next/link";
 import { link, one } from "./catalog";
 import { fmtDate, getDash } from "./i18n";
 import { requireAdmin } from "./session";
 import { setStatus } from "./team-actions";
 import { AREA, call, CLOSED, OWNER, PLATFORM, SEVERITY, statusList, tone, type Kind, type TeamRow } from "./team";
 import { Modal } from "./Modal";
+import { Pager, pageOf, sizeOf } from "./pager";
+import { PendingLink, SubmitButton } from "./Pending";
 import { DragCard, DropColumn } from "./TeamDnd";
 import { ItemForm, Opts } from "./TeamForm";
-import { btnLime, btnSmall, Chip, input, PageTitle } from "./ui";
+import { btnLime, btnSmall, Chip, EmptyState, Flash, input, PageTitle } from "./ui";
 
 type Sp = Record<string, string | string[] | undefined>;
 export const Unavailable = ({ text }: { text: string }) => (
   <p role="alert" className="rounded-2xl bg-d-amber px-4 py-3 text-sm font-semibold">{text}</p>
 );
 export const ErrorBanner = ({ code, errs }: { code: string; errs: Record<string, string> }) =>
-  code ? <p role="alert" className="mb-5 rounded-2xl bg-d-blush px-4 py-3 text-sm font-semibold text-d-danger">{errs[code] ?? errs.unavailable}</p> : null;
+  code ? <Flash tone="err">{errs[code] ?? errs.unavailable}</Flash> : null;
 
 // A <select> and a button in a plain form: no JavaScript, no drag and drop.
 export async function StatusMenu({ num, kind, status, back }: { num: number; kind: Kind; status: string; back: string }) {
@@ -27,7 +28,7 @@ export async function StatusMenu({ num, kind, status, back }: { num: number; kin
       <select name="status" defaultValue={status} aria-label={t.team.list.moveTo} className="h-9 min-w-0 flex-1 rounded-full border border-d-line bg-d-paper px-3 text-xs outline-none focus:border-d-teal">
         <Opts list={statusList(kind)} t={t} />
       </select>
-      <button type="submit" className="h-9 shrink-0 rounded-full border border-d-line bg-d-card px-4 text-xs font-semibold">{t.team.list.move}</button>
+      <SubmitButton className="h-9 shrink-0 rounded-full border border-d-line bg-d-card px-4 text-xs font-semibold">{t.team.list.move}</SubmitButton>
     </form>
   );
 }
@@ -54,10 +55,16 @@ export async function TeamList({ kind, sp }: { kind: Kind; sp: Sp }) {
   if (open) filters.open = true;
   if (mine) filters.mine = true;
   const here = link(base, { ...cur, open: open ? "1" : "", mine: mine ? "1" : "", view: list ? "list" : "" });
-  const res = await call<TeamRow[]>(supabase, "team_list", { p_kind: kind, p_filters: filters, p_limit: 500 });
-  const rows = res.data ?? [];
+  const page = pageOf(sp.page);
+  const size = sizeOf(sp.size);
+  // List view: one page of 25 from the database. Board view: everything (up to 500), as before.
+  const res = list
+    ? await call<{ rows: TeamRow[]; total: number }>(supabase, "team_list_page", { p_kind: kind, p_filters: filters, p_limit: size, p_offset: (page - 1) * size })
+    : await call<TeamRow[]>(supabase, "team_list", { p_kind: kind, p_filters: filters, p_limit: 500 });
+  const rows = (list ? (res.data as { rows: TeamRow[] } | null)?.rows : (res.data as TeamRow[] | null)) ?? [];
+  const total = list ? ((res.data as { total: number } | null)?.total ?? 0) : rows.length;
   const statuses = statusList(kind);
-  const sub = `${rows.length} ${L.count}`;
+  const sub = `${total} ${L.count}`;
   const drawer = one(sp.new) === kind; // the create form opens in a side drawer on this page
 
   return (
@@ -70,15 +77,15 @@ export async function TeamList({ kind, sp }: { kind: Kind; sp: Sp }) {
         </Modal>
       )}
       <div className="mb-5 flex flex-wrap items-center gap-3">
-        <Link href={link(base, { ...cur, open: open ? "1" : "", mine: mine ? "1" : "", view: list ? "list" : "", new: kind })} scroll={false} className={`${btnLime} inline-flex items-center gap-2`}>
+        <PendingLink href={link(base, { ...cur, open: open ? "1" : "", mine: mine ? "1" : "", view: list ? "list" : "", new: kind })} scroll={false} className={`${btnLime} inline-flex items-center gap-2`}>
           <Plus size={18} aria-hidden="true" />{kind === "bug" ? L.newBug : L.newTask}
-        </Link>
+        </PendingLink>
         <span className="flex gap-1 rounded-full bg-d-card p-1 text-sm font-semibold">
           {[false, true].map((tb) => (
-            <Link key={String(tb)} href={link(base, { ...cur, open: open ? "1" : "", mine: mine ? "1" : "", view: tb ? "list" : "" })}
+            <PendingLink key={String(tb)} spinner={false} href={link(base, { ...cur, open: open ? "1" : "", mine: mine ? "1" : "", view: tb ? "list" : "" })}
               aria-current={tb === list ? "page" : undefined} className={`rounded-full px-4 py-1.5 ${tb === list ? "bg-lime text-ink" : "text-d-muted"}`}>
               {tb ? L.table : L.board}
-            </Link>
+            </PendingLink>
           ))}
         </span>
       </div>
@@ -108,14 +115,14 @@ export async function TeamList({ kind, sp }: { kind: Kind; sp: Sp }) {
         </select>
         <label className="flex h-11 items-center gap-2 text-sm"><input type="checkbox" name="open" value="1" defaultChecked={open} className="size-4 accent-d-teal" />{L.openOnly}</label>
         <label className="flex h-11 items-center gap-2 text-sm"><input type="checkbox" name="mine" value="1" defaultChecked={mine} className="size-4 accent-d-teal" />{L.mine}</label>
-        <button type="submit" className={btnSmall}>{L.apply}</button>
-        <Link href={list ? `${base}?view=list` : base} className="inline-flex h-10 items-center text-sm font-semibold text-d-muted">{L.reset}</Link>
+        <SubmitButton className={btnSmall}>{L.apply}</SubmitButton>
+        <PendingLink href={list ? `${base}?view=list` : base} className="inline-flex h-10 items-center text-sm font-semibold text-d-muted">{L.reset}</PendingLink>
       </form>
 
       {res.err ? (
         <Unavailable text={t.team.unavailable} />
       ) : list ? (
-        rows.length === 0 ? <p className="text-d-muted">{L.empty}</p> : (
+        rows.length === 0 ? <EmptyState>{L.empty}</EmptyState> : (
           <div className="flex flex-col gap-4">
             {statuses.map((s) => {
               const grp = rows.filter((r) => r.status === s);
@@ -141,14 +148,14 @@ export async function TeamList({ kind, sp }: { kind: Kind; sp: Sp }) {
                         const who = kind === "bug" ? r.platform : r.owner;
                         return (
                           <li key={r.num} className="border-t border-d-line first:border-t-0">
-                            <Link href={`/dashboard/team/${r.num}`} className={`${ROW} py-3 hover:bg-d-paper`}>
+                            <PendingLink href={`/dashboard/team/${r.num}`} spinner={false} className={`${ROW} py-3 hover:bg-d-paper`}>
                               <bdi className="text-d-muted">#{r.num}</bdi>
                               <span className="min-w-0 truncate font-semibold">{r.title}</span>
                               <span>{sev ? <Chip tone={tone(sev)}>{v[sev] ?? sev}</Chip> : "—"}</span>
                               <span className="truncate text-sm">{who ? (v[who] ?? who) : "—"}</span>
                               <span className="truncate text-sm">{r.area ? (v[r.area] ?? r.area) : "—"}</span>
                               <span className="text-sm text-d-muted">{fmtDate(lang, kind === "task" ? r.due_date : r.updated_at)}</span>
-                            </Link>
+                            </PendingLink>
                           </li>
                         );
                       })}
@@ -157,6 +164,7 @@ export async function TeamList({ kind, sp }: { kind: Kind; sp: Sp }) {
                 </details>
               );
             })}
+            <Pager size={size} page={page} total={total} base={base} params={{ ...cur, open: open ? "1" : undefined, mine: mine ? "1" : undefined, view: "list" }} />
           </div>
         )
       ) : (
@@ -180,9 +188,9 @@ export async function TeamList({ kind, sp }: { kind: Kind; sp: Sp }) {
                   const sev = kind === "bug" ? r.severity : r.priority;
                   return (
                     <DragCard key={r.num} num={r.num} status={r.status} className="flex flex-col gap-2.5 rounded-2xl border border-d-line bg-d-card p-4 shadow-card">
-                      <Link href={`/dashboard/team/${r.num}`} draggable={false} className="font-semibold leading-6 hover:underline">
+                      <PendingLink href={`/dashboard/team/${r.num}`} draggable={false} spinner={false} className="font-semibold leading-6 hover:underline">
                         <bdi className="me-1.5 text-d-muted">#{r.num}</bdi>{r.title}
-                      </Link>
+                      </PendingLink>
                       <div className="flex flex-wrap gap-1.5">
                         {sev && <Chip tone={tone(sev)}>{v[sev] ?? sev}</Chip>}
                         {r.owner && <Chip>{v[r.owner] ?? r.owner}</Chip>}

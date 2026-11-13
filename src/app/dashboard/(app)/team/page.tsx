@@ -1,11 +1,11 @@
 import { Bug, ListChecks, Plus } from "lucide-react";
-import Link from "next/link";
+import { PendingLink } from "@/dashboard/Pending";
 import { fmtDate, fmtNum, getDash } from "@/dashboard/i18n";
 import { requireAdmin } from "@/dashboard/session";
 import { Unavailable } from "@/dashboard/TeamBoard";
 import { Bars, Donut, Weekly } from "@/dashboard/TeamCharts";
 import { AREA, BUG_STATUS, call, OWNER, SEVERITY, tone, type TeamOverview } from "@/dashboard/team";
-import { Card, Chip, PageTitle, Tile } from "@/dashboard/ui";
+import { Card, Chip, EmptyState, PageTitle, Tile } from "@/dashboard/ui";
 
 export default async function TeamOverviewPage() {
   const { supabase } = await requireAdmin();
@@ -25,16 +25,16 @@ export default async function TeamOverviewPage() {
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Africa/Cairo" }).format(new Date());
   const item = (x: { num: number; title: string; status: string }, extra?: React.ReactNode) => (
     <li key={x.num} className="flex flex-wrap items-center justify-between gap-2 border-t border-d-line py-2.5 first:border-0">
-      <Link href={`/dashboard/team/${x.num}`} className="min-w-0 font-semibold hover:underline">
+      <PendingLink href={`/dashboard/team/${x.num}`} spinner={false} className="min-w-0 font-semibold hover:underline">
         <bdi className="me-1.5 text-d-muted">#{x.num}</bdi>{x.title}
-      </Link>
+      </PendingLink>
       <span className="flex items-center gap-2 text-sm text-d-muted">{extra}<Chip tone={tone(x.status)}>{v[x.status] ?? x.status}</Chip></span>
     </li>
   );
   const box = (title: string, empty: string, children: React.ReactNode[]) => (
     <Card>
       <h2 className="mb-2 text-lg font-bold">{title}</h2>
-      {children.length ? <ul>{children}</ul> : <p className="text-d-muted">{empty}</p>}
+      {children.length ? <ul>{children}</ul> : <EmptyState>{empty}</EmptyState>}
     </Card>
   );
   const goto = [
@@ -54,10 +54,10 @@ export default async function TeamOverviewPage() {
       </div>
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {goto.map((g) => (
-          <Link key={g.href} href={g.href} className="flex items-center gap-3.5 rounded-3xl border border-d-line bg-d-card p-5 shadow-card hover:border-d-teal">
+          <PendingLink key={g.href} href={g.href} spinner={false} className="flex items-center gap-3.5 rounded-3xl border border-d-line bg-d-card p-5 shadow-card hover:border-d-teal">
             <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-d-mint">{g.icon}</span>
             <span><span className="block font-bold">{g.title}</span><span className="block text-sm text-d-muted">{g.sub}</span></span>
-          </Link>
+          </PendingLink>
         ))}
       </div>
       <div className="mb-6 grid gap-4 lg:grid-cols-2">

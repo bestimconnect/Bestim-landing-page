@@ -1,8 +1,8 @@
 import type { DashDict } from "./i18n";
 import { saveItem } from "./team-actions";
 import { AREA, OWNER, PLATFORM, PRIORITY, SEVERITY, type Kind, type TeamItem } from "./team";
-import { btnLime, Field, input } from "./ui";
-import Link from "next/link";
+import { PendingLink, SubmitButton } from "./Pending";
+import { btnLime, Field, Flash, input } from "./ui";
 
 export const textarea = "w-full rounded-2xl border border-d-line bg-d-paper px-3.5 py-3 text-[15px] outline-none focus:border-d-teal";
 
@@ -39,7 +39,7 @@ export function ItemForm({ kind, item, t, here, cancel, err }: { kind: Kind; ite
       <input type="hidden" name="kind" value={kind} />
       <input type="hidden" name="here" value={here} />
       {item && <input type="hidden" name="num" value={item.num} />}
-      {err && <p role="alert" className="rounded-2xl bg-d-blush px-4 py-3 text-sm font-semibold text-d-danger">{errs[err] ?? errs.unavailable}</p>}
+      {err && <Flash tone="err" className="mb-0">{errs[err] ?? errs.unavailable}</Flash>}
       <Field label={f.title}><input name="title" defaultValue={item?.title ?? ""} required maxLength={200} className={input} /></Field>
       {kind === "bug" ? (
         <>
@@ -80,8 +80,8 @@ export function ItemForm({ kind, item, t, here, cancel, err }: { kind: Kind; ite
         </>
       )}
       <div className="mt-1 flex gap-2.5">
-        <button type="submit" className={`${btnLime} flex-1`}>{item ? t.team.form.save : t.team.form.create}</button>
-        <Link href={cancel} replace className="inline-flex h-12 items-center justify-center rounded-full border border-d-line bg-d-card px-5 text-[15px] font-semibold">{t.team.form.cancel}</Link>
+        <SubmitButton className={`${btnLime} flex-1`}>{item ? t.team.form.save : t.team.form.create}</SubmitButton>
+        <PendingLink href={cancel} replace spinner={false} className="inline-flex h-12 items-center justify-center rounded-full border border-d-line bg-d-card px-5 text-[15px] font-semibold">{t.team.form.cancel}</PendingLink>
       </div>
     </form>
   );

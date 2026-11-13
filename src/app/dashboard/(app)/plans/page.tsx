@@ -1,15 +1,14 @@
-import Link from "next/link";
 import { canEditPlans, link, one } from "@/dashboard/catalog";
 import { deletePlan, savePlan, savePlans } from "@/dashboard/plan-actions";
 import { ENTITLEMENTS, GROUPS, MAX_PLANS } from "@/dashboard/plans";
 import { fmtNum, getDash } from "@/dashboard/i18n";
 import { Modal } from "@/dashboard/Modal";
+import { PendingLink, SubmitButton } from "@/dashboard/Pending";
 import { requireAdmin } from "@/dashboard/session";
 import type { FeatureLock, Plan } from "@/dashboard/types";
-import { btnLime, CatalogForm, Chip, Field, input, PageTitle } from "@/dashboard/ui";
+import { btnLime, CatalogForm, Chip, EmptyState, Field, Flash, InfoBanner, input, PageTitle, td } from "@/dashboard/ui";
 
 const PATH = "/dashboard/plans";
-const cell = "border-t border-d-line px-3 py-3 align-top";
 type Dict = Awaited<ReturnType<typeof getDash>>["t"];
 
 export default async function PlansPage({ searchParams }: PageProps<"/dashboard/plans">) {
@@ -33,9 +32,9 @@ export default async function PlansPage({ searchParams }: PageProps<"/dashboard/
   return (
     <>
       <PageTitle sub={`${fmtNum(plans.length)} / ${fmtNum(MAX_PLANS)} · ${t.plans.sub}`}>{t.plans.title}</PageTitle>
-      <p className="mb-5 rounded-2xl bg-d-sky px-4.5 py-3 text-sm leading-6">{t.plans.info}</p>
-      {one(sp.saved) && <p role="status" className="mb-5 rounded-2xl bg-d-mint px-4 py-3 text-sm font-semibold">{t.plans.saved}</p>}
-      {err && <p role="alert" className="mb-5 rounded-2xl bg-d-blush px-4 py-3 text-sm font-semibold text-d-danger">{errs[err] ?? errs.save}</p>}
+      <InfoBanner>{t.plans.info}</InfoBanner>
+      {one(sp.saved) && <Flash>{t.plans.saved}</Flash>}
+      {err && <Flash tone="err">{errs[err] ?? errs.save}</Flash>}
 
       {edit && (
         <div className="mb-6 flex flex-wrap items-center gap-3">
@@ -45,13 +44,13 @@ export default async function PlansPage({ searchParams }: PageProps<"/dashboard/
               <span className="text-sm text-d-muted">{t.plans.maxHint}</span>
             </>
           ) : (
-            <Link href={link(PATH, { modal: "plan-new" })} className={`${btnLime} inline-flex items-center`}>{t.plans.new}</Link>
+            <PendingLink href={link(PATH, { modal: "plan-new" })} className={`${btnLime} inline-flex items-center`}>{t.plans.new}</PendingLink>
           )}
         </div>
       )}
 
       {plans.length === 0 ? (
-        <p className="text-d-muted">{t.plans.empty}</p>
+        <EmptyState>{t.plans.empty}</EmptyState>
       ) : (
         <form action={savePlans}>
           <input type="hidden" name="here" value={PATH} />
@@ -62,7 +61,7 @@ export default async function PlansPage({ searchParams }: PageProps<"/dashboard/
                 <article key={p.id} className="grid content-start gap-3 rounded-3xl border border-d-line bg-d-card p-5 shadow-card">
                   <div className="flex items-center justify-between gap-2">
                     <p className="text-xs text-d-muted" dir="ltr">{p.id}</p>
-                    <Link href={link(PATH, { modal: "plan-edit", id: p.id })} className="text-xs font-semibold text-d-teal">{t.plans.more}</Link>
+                    <PendingLink href={link(PATH, { modal: "plan-edit", id: p.id })} spinner={false} className="text-xs font-semibold text-d-teal">{t.plans.more}</PendingLink>
                   </div>
                   <div className="grid grid-cols-2 gap-2.5">
                     <Field label={t.catalog.nameAr}><input name={`${p.id}.name_ar`} required maxLength={40} defaultValue={p.name_ar} className={input} /></Field>
@@ -105,7 +104,7 @@ export default async function PlansPage({ searchParams }: PageProps<"/dashboard/
                           live={e.live}
                           t={t}
                           cells={plans.map((p) => (
-                            <td key={p.id} className={cell}>
+                            <td key={p.id} className={`${td} !px-3 !py-3 align-top !whitespace-normal`}>
                               {e.kind === "number" ? (
                                 <input name={`${p.id}.${e.key}`} type="number" min={0} dir="ltr" placeholder={t.plans.blank} defaultValue={num(p.entitlements[e.key])} className={`${input} max-w-32`} />
                               ) : (
@@ -135,7 +134,7 @@ export default async function PlansPage({ searchParams }: PageProps<"/dashboard/
           </fieldset>
           {edit ? (
             <div className="sticky bottom-4 z-10 mt-5 flex justify-end">
-              <button type="submit" className={`${btnLime} px-10`}>{t.catalog.save}</button>
+              <SubmitButton className={`${btnLime} px-10`}>{t.catalog.save}</SubmitButton>
             </div>
           ) : (
             <p className="mt-4 text-sm text-d-muted">{t.catalog.viewOnly}</p>
@@ -187,7 +186,7 @@ function FeatureRows({ label, live, t, cells, lock }: { label: string; live: boo
   return (
     <>
       <tr>
-        <th scope="row" className={`${cell} text-start font-semibold`}>
+        <th scope="row" className={`${td} !px-3 !py-3 text-start align-top font-semibold !whitespace-normal`}>
           {label}
           <span className="mt-1 block"><Chip tone={live ? "mint" : "amber"}>{live ? t.plans.live : t.plans.soonTag}</Chip></span>
         </th>

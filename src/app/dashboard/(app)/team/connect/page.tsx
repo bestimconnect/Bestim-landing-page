@@ -1,4 +1,5 @@
 import { Check } from "lucide-react";
+import { SubmitButton } from "@/dashboard/Pending";
 import { call } from "@/dashboard/team";
 import { revokeKey } from "@/dashboard/team-actions";
 import { KeyMaker } from "@/dashboard/TeamKeys";
@@ -32,7 +33,7 @@ export default async function ConnectPage() {
             <li key={k.id} className="flex flex-wrap items-center justify-between gap-3 border-t border-d-line pt-2">
               <span className="font-semibold">{k.label}</span>
               <span className="text-sm text-d-muted">{k.revoked_at ? c.keyRevoked : `${c.keyUsed}: ${k.last_used_at ? k.last_used_at.slice(0, 10) : c.keyNever}`}</span>
-              {!k.revoked_at && <form action={revokeKey}><input type="hidden" name="id" value={k.id} /><button className={btnSmall}>{c.keyRevoke}</button></form>}
+              {!k.revoked_at && <form action={revokeKey}><input type="hidden" name="id" value={k.id} /><SubmitButton className={btnSmall}>{c.keyRevoke}</SubmitButton></form>}
             </li>
           ))}
         </ul>
