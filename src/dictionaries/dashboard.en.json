@@ -568,6 +568,10 @@
       "noFiles": "No files yet.",
       "upload": "Upload",
       "fileHint": "Up to 10 MB: images, video or PDF.",
+      "openFull": "Open full size",
+      "removeFile": "Remove file",
+      "removeTitle": "Remove this file?",
+      "removeBody": "It is deleted for good, from the item and from storage. The history keeps a line saying it was removed.",
       "linkedTask": "Linked task",
       "linkedBugs": "Bugs linked to this task",
       "activity": "Activity",
@@ -579,7 +583,8 @@
         "owner": "Owner changed from {from} to {to}",
         "edited": "Details edited",
         "comment": "Comment added",
-        "file": "File attached"
+        "file": "File attached",
+        "file_removed": "File removed"
       }
     },
     "connect": {
