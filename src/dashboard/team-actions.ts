@@ -149,6 +149,20 @@ export async function addFile(f: FormData) {
   redirect(here);
 }
 
+// Delete one screenshot or file: the database row first (it checks the role and writes the history), then the stored object.
+export async function removeFile(f: FormData) {
+  const { supabase, here } = await begin(f, "/dashboard/team");
+  const num = str(f, "num");
+  const id = str(f, "file_id");
+  if (!/^\d{1,9}$/.test(num) || !/^[0-9a-f-]{36}$/.test(id)) fail(here, "notFound");
+  const r = await call<Res & { path?: string }>(supabase, "team_file_delete", { p_num: Number(num), p_file_id: id, p_via: "dashboard" });
+  const code = outcome(r);
+  if (code) fail(here, code);
+  if (r.data?.path) await supabase.storage.from("team-files").remove([r.data.path]);
+  done();
+  redirect(here);
+}
+
 // Personal keys for the Claude connector. The key is shown once, so this returns it to the page instead of redirecting.
 export async function createKey(_prev: { key?: string; error?: string } | null, f: FormData) {
   const { supabase } = await requireAdmin();

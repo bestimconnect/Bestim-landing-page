@@ -1,18 +1,18 @@
-import { FileText, Paperclip } from "lucide-react";
+import { ExternalLink, FileText, Paperclip, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { one } from "@/dashboard/catalog";
 import { fmtDate, getDash } from "@/dashboard/i18n";
 import { Modal } from "@/dashboard/Modal";
 import { requireAdmin } from "@/dashboard/session";
-import { addComment, addFile } from "@/dashboard/team-actions";
+import { addComment, addFile, removeFile } from "@/dashboard/team-actions";
 import { call, tone, type TeamDetail } from "@/dashboard/team";
 import { ErrorBanner, StatusMenu, Unavailable } from "@/dashboard/TeamBoard";
 import { ItemForm, textarea } from "@/dashboard/TeamForm";
-import { btnLime, btnSmall, Card, Chip, PageTitle } from "@/dashboard/ui";
+import { btnLime, btnSmall, Card, Chip, iconBtn, PageTitle } from "@/dashboard/ui";
 
 export default async function TeamItemPage({ params, searchParams }: PageProps<"/dashboard/team/[num]">) {
-  const { supabase } = await requireAdmin();
+  const { supabase, role } = await requireAdmin();
   const { t, lang } = await getDash();
   const { num } = await params;
   if (!/^\d{1,9}$/.test(num)) notFound();
@@ -49,6 +49,8 @@ export default async function TeamItemPage({ params, searchParams }: PageProps<"
     (I.act as Record<string, string>)[a.action]
       ?.replace("{from}", lab(a.detail?.from)).replace("{to}", lab(a.detail?.to ?? a.detail?.status)) ?? a.action;
   const h2 = "mb-3 text-lg font-bold";
+  const size = (n: number) => (n < 1024 ? `${n} B` : n < 1048576 ? `${(n / 1024).toFixed(1)} KB` : `${(n / 1048576).toFixed(1)} MB`);
+  const gone = d.files.find((x) => x.id === one(sp.delfile));
 
   return (
     <>
@@ -57,6 +59,20 @@ export default async function TeamItemPage({ params, searchParams }: PageProps<"
       {one(sp.edit) === "1" && (
         <Modal title={it.kind === "bug" ? t.team.form.editBug : t.team.form.editTask} closeHref={here} closeLabel={t.team.form.cancel}>
           <ItemForm kind={it.kind} item={it} t={t} here={`${here}?edit=1`} cancel={here} err={one(sp.err)} />
+        </Modal>
+      )}
+      {gone && (
+        <Modal title={I.removeTitle} closeHref={here} closeLabel={t.team.form.cancel}>
+          <form action={removeFile} className="flex flex-col gap-4 p-6">
+            <input type="hidden" name="num" value={it.num} />
+            <input type="hidden" name="file_id" value={gone.id} />
+            <input type="hidden" name="here" value={here} />
+            <p className="leading-6">{I.removeBody}</p>
+            <div className="flex flex-wrap gap-2.5">
+              <button type="submit" className={btnLime}>{I.removeFile}</button>
+              <Link href={here} className={btnSmall}>{t.team.form.cancel}</Link>
+            </div>
+          </form>
         </Modal>
       )}
       <div className="grid items-start gap-6 lg:grid-cols-[1fr_22rem]">
@@ -113,19 +129,29 @@ export default async function TeamItemPage({ params, searchParams }: PageProps<"
           <Card>
             <h2 className={h2}>{I.files}</h2>
             {d.files.length === 0 ? <p className="mb-4 text-d-muted">{I.noFiles}</p> : (
-              <ul className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <ul className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {d.files.map((x) => {
                   const href = url.get(x.path);
                   const body = x.mime.startsWith("image/") && href ? (
                     // Signed Storage links: Next's image optimiser isn't needed (same as the catalog pictures).
+                    // The whole picture is shown (object-contain), never cropped.
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={href} alt="" loading="lazy" className="h-32 w-full rounded-2xl border border-d-line object-cover" />
+                    <img src={href} alt="" loading="lazy" className="h-56 w-full rounded-2xl border border-d-line bg-d-paper object-contain" />
                   ) : (
-                    <span className="flex h-32 flex-col items-center justify-center gap-1.5 rounded-2xl border border-d-line bg-d-paper text-sm font-semibold">
+                    <span className="flex h-56 flex-col items-center justify-center gap-1.5 rounded-2xl border border-d-line bg-d-paper text-sm font-semibold">
                       <FileText size={26} aria-hidden="true" />{x.mime.split("/")[1]}
                     </span>
                   );
-                  return <li key={x.id}>{href ? <a href={href} target="_blank" rel="noreferrer">{body}</a> : body}</li>;
+                  return (
+                    <li key={x.id}>
+                      {href ? <a href={href} target="_blank" rel="noreferrer">{body}</a> : body}
+                      <div className="mt-1.5 flex items-center gap-1 text-xs text-d-muted">
+                        <bdi className="me-auto">{size(x.size)}</bdi>
+                        {href && <a href={href} target="_blank" rel="noreferrer" className={iconBtn} title={I.openFull} aria-label={I.openFull}><ExternalLink size={16} aria-hidden="true" /></a>}
+                        {role !== "viewer" && <Link href={`${here}?delfile=${x.id}`} className={iconBtn} title={I.removeFile} aria-label={I.removeFile}><Trash2 size={16} aria-hidden="true" /></Link>}
+                      </div>
+                    </li>
+                  );
                 })}
               </ul>
             )}
