@@ -1,10 +1,12 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import { canEdit, link, one } from "@/dashboard/catalog";
 import { savePart } from "@/dashboard/catalog-actions";
 import { fmtNum, getDash } from "@/dashboard/i18n";
 import { Modal } from "@/dashboard/Modal";
+import { Pager, pageOf, sizeOf } from "@/dashboard/pager";
+import { PendingLink } from "@/dashboard/Pending";
 import { requireAdmin } from "@/dashboard/session";
-import { btnLime, CatalogForm, Field, input, PageTitle, Pic, PicField, Switch, VisibleBox } from "@/dashboard/ui";
+import { btnLime, CatalogForm, EmptyState, Field, input, PageTitle, Pic, PicField, Switch, TabNav, VisibleBox } from "@/dashboard/ui";
 
 type Part = {
   id: string; name_ar: string; name_en: string; default_interval_km: number | null; default_interval_months: number | null;
@@ -24,26 +26,31 @@ export default async function PartsPage({ searchParams }: PageProps<"/dashboard/
   const modal = one(sp.modal);
   const err = one(sp.err);
 
-  const [partsRes, catsRes] = await Promise.all([
-    supabase
-      .from("service_types")
-      .select("id,name_ar,name_en,default_interval_km,default_interval_months,category_id,has_reminder,fields,is_active,image_ok,image_soon,image_late")
-      .order("sort")
-      .order("name_en"),
-    supabase.from("record_categories").select("id,parent_id,name_en,name_ar,sort").order("sort"),
-  ]);
-  const parts = (partsRes.data ?? []) as Part[];
+  const sel = "id,name_ar,name_en,default_interval_km,default_interval_months,category_id,has_reminder,fields,is_active,image_ok,image_soon,image_late";
+  const catsRes = await supabase.from("record_categories").select("id,parent_id,name_en,name_ar,sort").order("sort");
   const cats = (catsRes.data ?? []) as Cat[];
   const nm = (x: { name_ar: string; name_en: string }) => (lang === "ar" ? x.name_ar : x.name_en);
   const tops = cats.filter((c) => !c.parent_id);
-  const topOf = (id: string | null) => {
-    const c = cats.find((x) => x.id === id);
-    return c?.parent_id ?? c?.id;
-  };
   const cat = tops.find((c) => c.id === one(sp.cat))?.id;
-  const shown = cat ? parts.filter((p) => topOf(p.category_id) === cat) : parts;
+  const q = one(sp.q).trim().slice(0, 60).replace(/[,()%*]/g, " ");
+  const page = pageOf(sp.page);
+  const SIZE = sizeOf(sp.size);
 
-  const list = link(PATH, { cat });
+  // The top category plus its sub-categories, so one filter covers the whole group.
+  const ids = cat ? [cat, ...cats.filter((c) => c.parent_id === cat).map((c) => c.id)] : [];
+  let query = supabase.from("service_types").select(sel, { count: "exact" });
+  if (cat) query = query.in("category_id", ids);
+  if (q) query = query.or(`name_en.ilike.%${q}%,name_ar.ilike.%${q}%`);
+  const { data: partRows, count } = await query
+    .order("sort")
+    .order("name_en")
+    .range((page - 1) * SIZE, page * SIZE - 1);
+  const parts = (partRows ?? []) as Part[];
+  const total = count ?? 0;
+  if (parts.length === 0 && total > 0 && page > 1) redirect(link(PATH, { cat, q, page: String(Math.ceil(total / SIZE)) }));
+
+  const pg = page > 1 ? String(page) : undefined;
+  const list = link(PATH, { cat, q, page: pg });
   const part = modal === "part-edit" ? parts.find((p) => p.id === one(sp.id)) : undefined;
   const every = (p: Part) => {
     const bits = [
@@ -52,8 +59,6 @@ export default async function PartsPage({ searchParams }: PageProps<"/dashboard/
     ].filter(Boolean);
     return bits.length ? `${t.parts.every} ${bits.join(" · ")}` : t.parts.noSchedule;
   };
-  const tab = (on: boolean) =>
-    `rounded-full px-4.5 py-2.25 text-sm ${on ? "bg-d-panel font-semibold text-[#f5f7f5]" : "border border-d-line bg-d-card"}`;
   const slots = [
     ["image_ok", t.parts.okPic, "bg-[#f7fce0]", part?.image_ok],
     ["image_soon", t.parts.soonPic, "bg-[#fff7e0]", part?.image_soon],
@@ -63,22 +68,23 @@ export default async function PartsPage({ searchParams }: PageProps<"/dashboard/
   return (
     <>
       <div className="flex flex-wrap items-start justify-between gap-x-4">
-        <PageTitle sub={`${fmtNum(parts.length)} ${t.parts.count} · ${t.parts.sub}`}>{t.parts.title}</PageTitle>
+        <PageTitle sub={`${fmtNum(total)} ${t.parts.count} · ${t.parts.sub}`}>{t.parts.title}</PageTitle>
         {edit && (
-          <Link href={link(PATH, { modal: "part-new", cat })} className={`${btnLime} mb-6 inline-flex items-center`}>{t.parts.new}</Link>
+          <PendingLink href={link(PATH, { modal: "part-new", cat, q, page: pg })} className={`${btnLime} mb-6 inline-flex items-center`}>{t.parts.new}</PendingLink>
         )}
       </div>
 
-      <nav className="mb-5 flex flex-wrap gap-2" aria-label={t.parts.category}>
-        <Link href={PATH} className={tab(!cat)}>{t.parts.all}</Link>
-        {tops.map((c) => <Link key={c.id} href={link(PATH, { cat: c.id })} className={tab(cat === c.id)}>{nm(c)}</Link>)}
-      </nav>
+      <TabNav
+        label={t.parts.category}
+        items={[{ href: PATH, label: t.parts.all, active: !cat }, ...tops.map((c) => ({ href: link(PATH, { cat: c.id }), label: nm(c), active: cat === c.id }))]}
+      />
 
-      {shown.length === 0 ? (
-        <p className="text-d-muted">{t.parts.empty}</p>
+      {parts.length === 0 ? (
+        <EmptyState>{t.parts.empty}</EmptyState>
       ) : (
+        <>
         <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-          {shown.map((p) => (
+          {parts.map((p) => (
             <article
               key={p.id}
               className={`relative rounded-[22px] border-2 bg-d-card p-3.5 shadow-card ${p.is_active ? "border-lime" : "border-d-line opacity-70"}`}
@@ -87,10 +93,10 @@ export default async function PartsPage({ searchParams }: PageProps<"/dashboard/
                 <Pic path={p.image_ok} className="max-h-27 max-w-32 object-contain" />
               </div>
               <div className="mt-3 flex items-start justify-between gap-2">
-                <Link href={link(PATH, { modal: "part-edit", id: p.id, cat })} className="min-w-0 after:absolute after:inset-0 after:rounded-[22px]">
+                <PendingLink href={link(PATH, { modal: "part-edit", id: p.id, cat, q, page: pg })} spinner={false} className="min-w-0 after:absolute after:inset-0 after:rounded-[22px]">
                   <span className="block text-base font-extrabold">{p.name_ar}</span>
                   <span className="block text-xs text-d-muted" dir="ltr">{p.name_en}</span>
-                </Link>
+                </PendingLink>
                 <span className="relative z-10">
                   <Switch table="service_types" id={p.id} on={p.is_active} back={list} label={t.catalog.visible} edit={edit} />
                 </span>
@@ -104,6 +110,8 @@ export default async function PartsPage({ searchParams }: PageProps<"/dashboard/
             </article>
           ))}
         </div>
+        <Pager page={page} total={total} size={SIZE} base={PATH} params={{ cat, q }} />
+        </>
       )}
 
       {((modal === "part-new" && edit) || part) && (
@@ -111,7 +119,7 @@ export default async function PartsPage({ searchParams }: PageProps<"/dashboard/
           <CatalogForm
             action={savePart}
             list={list}
-            here={part ? link(PATH, { modal: "part-edit", id: part.id, cat }) : link(PATH, { modal: "part-new", cat })}
+            here={part ? link(PATH, { modal: "part-edit", id: part.id, cat, q, page: pg }) : link(PATH, { modal: "part-new", cat, q, page: pg })}
             id={part?.id}
             edit={edit}
             err={err}

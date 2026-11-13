@@ -1,29 +1,43 @@
 import { Info } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { canEditPlans } from "@/dashboard/catalog";
+import { PendingLink, SubmitButton } from "@/dashboard/Pending";
 import { setUserPlan } from "@/dashboard/plan-actions";
 import type { Plan } from "@/dashboard/types";
 import { fmtDate, fmtNum, getDash } from "@/dashboard/i18n";
+import { Pager, pageOf, sizeOf } from "@/dashboard/pager";
 import { requireAdmin } from "@/dashboard/session";
 import type { UserDetail } from "@/dashboard/types";
-import { Avatar, btnLime, Chip, Field, input, Table, td, th, tint } from "@/dashboard/ui";
+import { Avatar, btnLime, Chip, EmptyState, Field, Flash, input, Table, td, th, tint } from "@/dashboard/ui";
 
 export default async function UserPage({ params, searchParams }: PageProps<"/dashboard/users/[id]">) {
   const { supabase, role } = await requireAdmin();
   const { t, lang } = await getDash();
   const { id } = await params;
-  const planMsg = (await searchParams).plan;
+  const sp = await searchParams;
+  const planMsg = sp.plan;
+  const lp = pageOf(sp.lp);
+  const dp = pageOf(sp.dp);
+  const size = sizeOf(sp.size);
+  const here = `/dashboard/users/${id}`;
   // Opening a user is written to the audit log by the function itself. A bad id makes it error: shown as "not found".
   const { data } = await supabase.rpc("admin_user_detail", { p_user: id });
   const u = data as UserDetail | null;
+  const [logsRes, daysRes] = u
+    ? await Promise.all([
+        supabase.rpc("admin_user_logs", { p_user: id, p_limit: size, p_offset: (lp - 1) * size }),
+        supabase.rpc("admin_user_ai_days", { p_user: id, p_limit: size, p_offset: (dp - 1) * size }),
+      ])
+    : [null, null];
+  const logs = (logsRes?.data ?? { total: 0, rows: [] }) as { total: number; rows: UserDetail["recent_logs"] };
+  const days = (daysRes?.data ?? { total: 0, rows: [] }) as { total: number; rows: UserDetail["ai_days"] };
   if (!u) {
     return (
       <>
-        <Link href="/dashboard/users" className="mb-4 inline-block text-sm font-medium text-d-teal underline-offset-4 hover:underline">
+        <PendingLink href="/dashboard/users" className="mb-4 inline-block text-sm font-medium text-d-teal underline-offset-4 hover:underline">
           ← {t.user.back}
-        </Link>
-        <p className="text-d-muted">{t.user.notFound}</p>
+        </PendingLink>
+        <EmptyState>{t.user.notFound}</EmptyState>
       </>
     );
   }
@@ -59,9 +73,9 @@ export default async function UserPage({ params, searchParams }: PageProps<"/das
           aria-hidden="true"
           className="pointer-events-none absolute -bottom-14 -end-16 h-auto w-72 opacity-8"
         />
-        <Link href="/dashboard/users" className="relative text-sm font-medium text-lime">
+        <PendingLink href="/dashboard/users" className="relative text-sm font-medium text-lime">
           ← {t.user.back}
-        </Link>
+        </PendingLink>
         <div className="relative flex flex-col items-center gap-2.5 text-center">
           <Avatar text={name} className="size-24 bg-lime text-[40px] text-ink" />
           <h1 className="text-2xl font-extrabold">{name}</h1>
@@ -98,8 +112,8 @@ export default async function UserPage({ params, searchParams }: PageProps<"/das
               t.user.planDefault
             )}
           </p>
-          {planMsg === "ok" && <p role="status" className="mt-3 rounded-2xl bg-d-mint px-4 py-3 text-sm font-semibold">{t.user.planSaved}</p>}
-          {planMsg === "err" && <p role="alert" className="mt-3 rounded-2xl bg-d-blush px-4 py-3 text-sm font-semibold text-d-danger">{t.user.planFailed}</p>}
+          {planMsg === "ok" && <Flash className="mt-3">{t.user.planSaved}</Flash>}
+          {planMsg === "err" && <Flash tone="err" className="mt-3">{t.user.planFailed}</Flash>}
           {canPlan && (
             <form action={setUserPlan} className="mt-4 grid items-end gap-3 sm:grid-cols-[1fr_1fr_auto]">
               <input type="hidden" name="user" value={u.id} />
@@ -114,7 +128,7 @@ export default async function UserPage({ params, searchParams }: PageProps<"/das
               <Field label={t.user.planExpires}>
                 <input name="expires" type="date" dir="ltr" defaultValue={u.plan_expires_at?.slice(0, 10) ?? ""} className={input} />
               </Field>
-              <button type="submit" className={btnLime}>{t.catalog.save}</button>
+              <SubmitButton className={btnLime}>{t.catalog.save}</SubmitButton>
             </form>
           )}
         </section>
@@ -122,7 +136,7 @@ export default async function UserPage({ params, searchParams }: PageProps<"/das
         <section>
           <h2 className="mb-3.5 text-xl font-extrabold">{t.user.carsTitle}</h2>
           {u.vehicles.length === 0 ? (
-            <p className="text-d-muted">{t.user.noCars}</p>
+            <EmptyState>{t.user.noCars}</EmptyState>
           ) : (
             <div className="grid gap-4 sm:grid-cols-2">
               {u.vehicles.map((v, i) => (
@@ -144,13 +158,13 @@ export default async function UserPage({ params, searchParams }: PageProps<"/das
           )}
         </section>
 
-        {u.recent_logs.length === 0 ? (
+        {logs.total === 0 ? (
           <section>
             <h2 className="mb-3.5 text-xl font-extrabold">{t.user.recentTitle}</h2>
-            <p className="text-d-muted">{t.user.noRecords}</p>
+            <EmptyState>{t.user.noRecords}</EmptyState>
           </section>
         ) : (
-          <Table title={t.user.recentTitle}>
+          <Table title={t.user.recentTitle} footer={<Pager page={lp} total={logs.total} size={size} pageKey="lp" base={here} params={{ dp: dp > 1 ? String(dp) : undefined }} />}>
             <thead>
               <tr>
                 {["", t.user.date, t.user.cost, t.user.source, t.user.status].map((h, i) => (
@@ -159,7 +173,7 @@ export default async function UserPage({ params, searchParams }: PageProps<"/das
               </tr>
             </thead>
             <tbody>
-              {u.recent_logs.map((l, i) => (
+              {logs.rows.map((l, i) => (
                 <tr key={i}>
                   <td className={`${td} font-semibold`}>{l.title}</td>
                   <td className={td}>{fmtDate(lang, l.service_date)}</td>
@@ -174,13 +188,13 @@ export default async function UserPage({ params, searchParams }: PageProps<"/das
           </Table>
         )}
 
-        {u.ai_days.length === 0 ? (
+        {days.total === 0 ? (
           <section>
             <h2 className="mb-3.5 text-xl font-extrabold">{t.user.aiTitle}</h2>
-            <p className="text-d-muted">{t.user.noAi}</p>
+            <EmptyState>{t.user.noAi}</EmptyState>
           </section>
         ) : (
-          <Table title={t.user.aiTitle}>
+          <Table title={t.user.aiTitle} footer={<Pager page={dp} total={days.total} size={size} pageKey="dp" base={here} params={{ lp: lp > 1 ? String(lp) : undefined }} />}>
             <thead>
               <tr>
                 {[t.user.day, t.user.voiceCalls, t.user.scans].map((h) => (
@@ -189,7 +203,7 @@ export default async function UserPage({ params, searchParams }: PageProps<"/das
               </tr>
             </thead>
             <tbody>
-              {u.ai_days.map((d) => (
+              {days.rows.map((d) => (
                 <tr key={d.day}>
                   <td className={td}>{fmtDate(lang, d.day)}</td>
                   <td className={td}>{fmtNum(d.count)}</td>

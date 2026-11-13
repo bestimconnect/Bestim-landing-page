@@ -2,7 +2,8 @@
 
 import { useActionState } from "react";
 import { createKey } from "./team-actions";
-import { btnLime, input } from "./ui";
+import { Spinner } from "./Pending";
+import { btnLime, Flash, input } from "./ui";
 
 type S = { key?: string; error?: string } | null;
 type Labels = { label: string; def: string; make: string; fresh: string; full: string; error: string };
@@ -17,9 +18,9 @@ export function KeyMaker({ url, t }: { url: string; t: Labels }) {
           {t.label}
           <input name="label" defaultValue={t.def} maxLength={60} className={`${input} w-64`} />
         </label>
-        <button disabled={pending} className={btnLime}>{t.make}</button>
+        <button disabled={pending} aria-busy={pending || undefined} className={`${btnLime} inline-flex items-center gap-2 disabled:cursor-wait disabled:opacity-80`}>{pending && <Spinner />}{t.make}</button>
       </form>
-      {s?.error && <p role="alert" className="mt-3 text-sm font-semibold text-red-700">{t.error}</p>}
+      {s?.error && <Flash tone="err" className="mt-3">{t.error}</Flash>}
       {s?.key && (
         <div className="mt-4 flex flex-col gap-3">
           <p className="text-sm font-semibold">{t.fresh}</p>

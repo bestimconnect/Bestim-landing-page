@@ -1,11 +1,12 @@
-import Link from "next/link";
+import { Pager, pageOf, sizeOf } from "@/dashboard/pager";
 import { canEdit, link, one } from "@/dashboard/catalog";
 import { fmtDate, getDash } from "@/dashboard/i18n";
 import { Modal } from "@/dashboard/Modal";
+import { PendingLink } from "@/dashboard/Pending";
 import { savePage } from "@/dashboard/page-actions";
 import { requireAdmin } from "@/dashboard/session";
 import type { SitePage } from "@/dashboard/types";
-import { btnSmall, CatalogForm, Chip, Field, input, PageTitle, Table, td, th } from "@/dashboard/ui";
+import { btnSmall, CatalogForm, Chip, Field, InfoBanner, input, PageTitle, Table, td, th } from "@/dashboard/ui";
 
 const PATH = "/dashboard/pages";
 const area = `${input} h-auto min-h-72 py-3 leading-7`;
@@ -15,16 +16,21 @@ export default async function PagesPage({ searchParams }: PageProps<"/dashboard/
   const { t, lang } = await getDash();
   const sp = await searchParams;
   const edit = canEdit(role);
+  const pg = pageOf(sp.page);
+  const size = sizeOf(sp.size);
 
-  const { data } = await supabase.from("site_pages").select("*").order("sort");
-  const pages = (data ?? []) as SitePage[];
-  const page = one(sp.modal) === "page-edit" ? pages.find((p) => p.slug === one(sp.id)) : undefined;
+  // The list needs only the short columns; the 60 KB bodies are loaded for the one page being edited.
+  const { data, count } = await supabase.from("site_pages").select("slug,sort,title_ar,title_en,is_published,updated_at", { count: "exact" }).order("sort").range((pg - 1) * size, pg * size - 1);
+  const pages = (data ?? []) as Omit<SitePage, "body_ar" | "body_en">[];
+  const slug = one(sp.modal) === "page-edit" && /^[a-z0-9-]{1,60}$/i.test(one(sp.id)) ? one(sp.id) : "";
+  const { data: full } = slug ? await supabase.from("site_pages").select("*").eq("slug", slug).maybeSingle() : { data: null };
+  const page = (full ?? undefined) as SitePage | undefined;
 
   return (
     <>
       <PageTitle sub={t.pages.sub}>{t.pages.title}</PageTitle>
-      <p className="mb-5 rounded-2xl bg-d-sky px-4.5 py-3 text-sm leading-6">{t.pages.info}</p>
-      <Table>
+      <InfoBanner>{t.pages.info}</InfoBanner>
+      <Table footer={<Pager size={size} page={pg} total={count ?? pages.length} base={PATH} />}>
         <thead>
           <tr>
             <th className={th}>{t.pages.page}</th>
@@ -42,7 +48,7 @@ export default async function PagesPage({ searchParams }: PageProps<"/dashboard/
               </td>
               <td className={td}>{fmtDate(lang, p.updated_at)}</td>
               <td className={`${td} text-end`}>
-                <Link href={link(PATH, { modal: "page-edit", id: p.slug })} className={btnSmall}>{edit ? t.catalog.edit : t.catalog.view}</Link>
+                <PendingLink href={link(PATH, { modal: "page-edit", id: p.slug })} className={btnSmall}>{edit ? t.catalog.edit : t.catalog.view}</PendingLink>
               </td>
             </tr>
           ))}

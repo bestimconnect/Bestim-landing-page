@@ -37,6 +37,7 @@ export type AdminRow = {
   team_name: string | null;
   created_at: string;
   last_sign_in_at: string | null;
+  total?: number;
 };
 
 export type UserDetail = {

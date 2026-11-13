@@ -1,9 +1,9 @@
 import { ExternalLink, FileText, Paperclip, Trash2 } from "lucide-react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { one } from "@/dashboard/catalog";
 import { fmtDate, getDash } from "@/dashboard/i18n";
 import { Modal } from "@/dashboard/Modal";
+import { PendingLink, SubmitButton } from "@/dashboard/Pending";
 import { requireAdmin } from "@/dashboard/session";
 import { addComment, addFile, removeFile } from "@/dashboard/team-actions";
 import { call, tone, type TeamDetail } from "@/dashboard/team";
@@ -41,7 +41,7 @@ export default async function TeamItemPage({ params, searchParams }: PageProps<"
   const sev = it.kind === "bug" ? it.severity : it.priority;
   const ref = (r: { num: number; title: string; status: string }) => (
     <li key={r.num} className="flex flex-wrap items-center justify-between gap-2 py-1.5">
-      <Link href={`/dashboard/team/${r.num}`} className="font-semibold hover:underline"><bdi className="me-1.5 text-d-muted">#{r.num}</bdi>{r.title}</Link>
+      <PendingLink href={`/dashboard/team/${r.num}`} spinner={false} className="font-semibold hover:underline"><bdi className="me-1.5 text-d-muted">#{r.num}</bdi>{r.title}</PendingLink>
       <Chip tone={tone(r.status)}>{lab(r.status)}</Chip>
     </li>
   );
@@ -69,8 +69,8 @@ export default async function TeamItemPage({ params, searchParams }: PageProps<"
             <input type="hidden" name="here" value={here} />
             <p className="leading-6">{I.removeBody}</p>
             <div className="flex flex-wrap gap-2.5">
-              <button type="submit" className={btnLime}>{I.removeFile}</button>
-              <Link href={here} className={btnSmall}>{t.team.form.cancel}</Link>
+              <SubmitButton className={btnLime}>{I.removeFile}</SubmitButton>
+              <PendingLink href={here} spinner={false} className={btnSmall}>{t.team.form.cancel}</PendingLink>
             </div>
           </form>
         </Modal>
@@ -81,7 +81,7 @@ export default async function TeamItemPage({ params, searchParams }: PageProps<"
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <Chip tone={tone(it.status)}>{lab(it.status)}</Chip>
               {sev && <Chip tone={tone(sev)}>{lab(sev)}</Chip>}
-              <Link href={`${here}?edit=1`} className={`${btnSmall} ms-auto`}>{I.edit}</Link>
+              <PendingLink href={`${here}?edit=1`} className={`${btnSmall} ms-auto`}>{I.edit}</PendingLink>
             </div>
             {fields.length > 0 && (
               <dl className="mb-4 grid gap-x-6 gap-y-3 sm:grid-cols-2">
@@ -122,7 +122,7 @@ export default async function TeamItemPage({ params, searchParams }: PageProps<"
               <input type="hidden" name="num" value={it.num} />
               <input type="hidden" name="here" value={here} />
               <textarea name="body" rows={3} maxLength={5000} required placeholder={I.commentPh} aria-label={I.commentPh} className={textarea} />
-              <button type="submit" className={`${btnLime} self-start`}>{I.post}</button>
+              <SubmitButton className={`${btnLime} self-start`}>{I.post}</SubmitButton>
             </form>
           </Card>
 
@@ -148,7 +148,7 @@ export default async function TeamItemPage({ params, searchParams }: PageProps<"
                       <div className="mt-1.5 flex items-center gap-1 text-xs text-d-muted">
                         <bdi className="me-auto">{size(x.size)}</bdi>
                         {href && <a href={href} target="_blank" rel="noreferrer" className={iconBtn} title={I.openFull} aria-label={I.openFull}><ExternalLink size={16} aria-hidden="true" /></a>}
-                        {role !== "viewer" && <Link href={`${here}?delfile=${x.id}`} className={iconBtn} title={I.removeFile} aria-label={I.removeFile}><Trash2 size={16} aria-hidden="true" /></Link>}
+                        {role !== "viewer" && <PendingLink href={`${here}?delfile=${x.id}`} spinner={false} className={iconBtn} title={I.removeFile} aria-label={I.removeFile}><Trash2 size={16} aria-hidden="true" /></PendingLink>}
                       </div>
                     </li>
                   );
@@ -160,7 +160,7 @@ export default async function TeamItemPage({ params, searchParams }: PageProps<"
               <input type="hidden" name="here" value={here} />
               <input type="file" name="file" required accept="image/png,image/jpeg,image/webp,image/heic,video/mp4,video/quicktime,application/pdf" aria-label={I.files}
                 className="min-w-0 flex-1 text-xs file:me-2 file:rounded-full file:border-0 file:bg-d-mint file:px-3 file:py-1.5 file:text-xs file:font-semibold" />
-              <button type="submit" className={`${btnSmall} gap-2`}><Paperclip size={16} aria-hidden="true" />{I.upload}</button>
+              <SubmitButton className={`${btnSmall} gap-2`}><Paperclip size={16} aria-hidden="true" />{I.upload}</SubmitButton>
             </form>
             <p className="mt-2 text-xs text-d-muted">{I.fileHint}</p>
           </Card>

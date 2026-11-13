@@ -1,16 +1,16 @@
-import { CirclePause, CirclePlay, Pencil, Search, ShieldPlus, Trash2, WalletCards } from "lucide-react";
-import Link from "next/link";
+import { CirclePause, CirclePlay, Pencil, ShieldPlus, Trash2, WalletCards } from "lucide-react";
 import { link, one } from "./catalog";
 import { fmtDate, fmtNum, type DashDict, type DashLang } from "./i18n";
 import { Modal } from "./Modal";
+import { Pager, pageOf, sizeOf } from "./pager";
+import { PendingLink, SubmitButton } from "./Pending";
 import { setUserPlan } from "./plan-actions";
 import type { Plan, UserRow } from "./types";
 import { createUser, deleteUser, setAdminRole, suspendUser, updateUser } from "./user-actions";
-import { ActionsTd, ActionsTh, Avatar, btnLime, btnSmall, Chip, Field, iconBtn, input, Table, td, th, tint } from "./ui";
+import { ActionsTd, ActionsTh, AddButton, Avatar, btnLime, btnSmall, Chip, EmptyState, Field, Flash, iconBtn, input, SearchBar, Table, td, th, tint, Toolbar } from "./ui";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 const PATH = "/dashboard/users";
-const PAGE = 25;
 const ic = { size: 16, strokeWidth: 1.9, "aria-hidden": true } as const;
 
 export const TEAMS = ["Shady", "Ahmed", "Daytwo"];
@@ -19,20 +19,20 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
   sp: Record<string, string | string[] | undefined>; role: string; me: string; t: DashDict; lang: DashLang; supabase: SupabaseClient;
 }) {
   const q = one(sp.q).trim().slice(0, 80);
-  const page = Math.max(1, Number(one(sp.page)) || 1);
+  const page = pageOf(sp.page);
+  const size = sizeOf(sp.size);
   const modal = one(sp.modal);
   const canManage = role === "owner" || role === "admin";
   const isOwner = role === "owner";
   const u = t.users;
   const errs = u.err as Record<string, string>;
 
-  const { data } = await supabase.rpc("admin_user_list", { p_search: q, p_limit: PAGE, p_offset: (page - 1) * PAGE });
+  const { data } = await supabase.rpc("admin_user_list", { p_search: q, p_limit: size, p_offset: (page - 1) * size });
   const rows = (data ?? []) as UserRow[];
   const total = rows[0]?.total ?? 0;
-  const base = { tab: "users", q: q || undefined, page: page > 1 ? String(page) : undefined };
+  const base = { tab: "users", q: q || undefined, page: page > 1 ? String(page) : undefined, size: size !== 25 ? String(size) : undefined };
   const here = link(PATH, base);
   const open = (m: string, id?: string) => link(PATH, { ...base, modal: m, id });
-  const pageHref = (p: number) => link(PATH, { tab: "users", q: q || undefined, page: p > 1 ? String(p) : undefined });
   const row = rows.find((r) => r.id === one(sp.id));
   const plans = modal === "user-plan" && row ? (((await supabase.from("plans").select("id,name_ar,name_en,is_default").order("sort")).data ?? []) as Plan[]) : [];
   const planName = (id: string | null) => {
@@ -43,34 +43,22 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
   const roleName = (r: string) => (u.roles as Record<string, string>)[r] ?? r;
   const err = one(sp.err);
   const planMsg = one(sp.plan);
-  const pager = "rounded-full border border-d-line bg-d-card px-4 py-2 text-sm";
 
   return (
     <>
-      {/* One row: search on the left, buttons on the right (rtl:flex-row-reverse keeps that order in Arabic too). */}
-      <div className="mb-5 flex items-center gap-3 rtl:flex-row-reverse">
-        <form className="flex min-w-0 flex-1 gap-2 sm:max-w-xl" role="search">
-          <input type="hidden" name="tab" value="users" />
-          <label className="flex h-12 min-w-0 flex-1 items-center gap-2.5 rounded-full border border-d-line bg-d-card px-5 text-d-muted focus-within:border-d-teal">
-            <Search size={18} strokeWidth={1.9} aria-hidden="true" className="shrink-0" />
-            <input name="q" defaultValue={q} placeholder={u.placeholder} aria-label={u.placeholder} className="min-w-0 flex-1 bg-transparent text-d-ink outline-none placeholder:text-d-muted" />
-          </label>
-          <button type="submit" className="h-12 shrink-0 rounded-full bg-lime px-6 font-semibold text-ink shadow-glow">{u.search}</button>
-        </form>
-        <div className="ms-auto flex shrink-0 items-center gap-2">
-          {canManage && <Link href={open("user-new")} className={`${btnLime} inline-flex items-center whitespace-nowrap`}>{u.new}</Link>}
-        </div>
-      </div>
+      <Toolbar actions={canManage && <AddButton href={open("user-new")}>{u.new}</AddButton>}>
+        <SearchBar q={q} placeholder={u.placeholder} button={u.search} hidden={{ tab: "users" }} />
+      </Toolbar>
 
-      {one(sp.saved) && <p role="status" className="mb-5 rounded-2xl bg-d-mint px-4 py-3 text-sm font-semibold">{u.saved}</p>}
-      {planMsg === "ok" && <p role="status" className="mb-5 rounded-2xl bg-d-mint px-4 py-3 text-sm font-semibold">{t.user.planSaved}</p>}
-      {planMsg === "err" && <p role="alert" className="mb-5 rounded-2xl bg-d-blush px-4 py-3 text-sm font-semibold text-d-danger">{t.user.planFailed}</p>}
-      {err && <p role="alert" className="mb-5 rounded-2xl bg-d-blush px-4 py-3 text-sm font-semibold text-d-danger">{errs[err] ?? errs.save}</p>}
+      {one(sp.saved) && <Flash>{u.saved}</Flash>}
+      {planMsg === "ok" && <Flash>{t.user.planSaved}</Flash>}
+      {planMsg === "err" && <Flash tone="err">{t.user.planFailed}</Flash>}
+      {err && <Flash tone="err">{errs[err] ?? errs.save}</Flash>}
 
       {rows.length === 0 ? (
-        <p className="text-d-muted">{u.empty}</p>
+        <EmptyState>{u.empty}</EmptyState>
       ) : (
-        <Table height="h-[calc(125dvh-24rem)] min-h-80">
+        <Table height="h-[calc(125dvh-24rem)] min-h-80" footer={<Pager size={size} page={page} total={total} capped={total > 10000} base="/dashboard/users" params={{ tab: "users", q: q || undefined }} />}>
           <thead>
             <tr>
               <th className={th}>{u.name}</th>
@@ -88,10 +76,10 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
             {rows.map((r, i) => (
               <tr key={r.id} className="group/row hover:bg-d-paper">
                 <td className={td}>
-                  <Link href={`/dashboard/users/${r.id}`} className="flex items-center gap-3 font-semibold hover:underline">
+                  <PendingLink href={`/dashboard/users/${r.id}`} spinner={false} className="flex items-center gap-3 font-semibold hover:underline">
                     <Avatar text={r.full_name || r.email || "?"} className={`size-9 text-sm text-ink ${tint(i)}`} />
                     <span className="max-w-48 truncate">{r.full_name || "—"}</span>
-                  </Link>
+                  </PendingLink>
                 </td>
                 <td className={td}><span dir="ltr" className="inline-block max-w-56 truncate align-middle">{r.email ?? "—"}</span></td>
                 <td className={td}>{r.plan_id ?? "—"}</td>
@@ -105,20 +93,20 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
                 <td className={td}>{fmtDate(lang, r.created_at)}</td>
                 {canManage && (
                   <ActionsTd>
-                    <Link href={open("user-edit", r.id)} className={iconBtn} title={u.edit} aria-label={u.edit}><Pencil {...ic} /></Link>
-                    <Link href={open("user-plan", r.id)} className={iconBtn} title={u.changePlan} aria-label={u.changePlan}><WalletCards {...ic} /></Link>
+                    <PendingLink spinner={false} href={open("user-edit", r.id)} className={iconBtn} title={u.edit} aria-label={u.edit}><Pencil {...ic} /></PendingLink>
+                    <PendingLink spinner={false} href={open("user-plan", r.id)} className={iconBtn} title={u.changePlan} aria-label={u.changePlan}><WalletCards {...ic} /></PendingLink>
                     {r.id !== me && !r.admin_role && (
                       <form action={suspendUser} className="inline-flex">
                         <input type="hidden" name="here" value={here} />
                         <input type="hidden" name="id" value={r.id} />
                         <input type="hidden" name="to" value={r.suspended ? "0" : "1"} />
-                        <button type="submit" className={iconBtn} title={r.suspended ? u.resume : u.suspend} aria-label={r.suspended ? u.resume : u.suspend}>
+                        <SubmitButton className={iconBtn} title={r.suspended ? u.resume : u.suspend} aria-label={r.suspended ? u.resume : u.suspend}>
                           {r.suspended ? <CirclePlay {...ic} /> : <CirclePause {...ic} />}
-                        </button>
+                        </SubmitButton>
                       </form>
                     )}
-                    {isOwner && !r.admin_role && <Link href={open("user-admin", r.id)} className={iconBtn} title={u.makeAdmin} aria-label={u.makeAdmin}><ShieldPlus {...ic} /></Link>}
-                    {isOwner && r.id !== me && !r.admin_role && <Link href={open("user-delete", r.id)} className={`${iconBtn} hover:!text-d-danger`} title={u.delete} aria-label={u.delete}><Trash2 {...ic} /></Link>}
+                    {isOwner && !r.admin_role && <PendingLink spinner={false} href={open("user-admin", r.id)} className={iconBtn} title={u.makeAdmin} aria-label={u.makeAdmin}><ShieldPlus {...ic} /></PendingLink>}
+                    {isOwner && r.id !== me && !r.admin_role && <PendingLink spinner={false} href={open("user-delete", r.id)} className={`${iconBtn} hover:!text-d-danger`} title={u.delete} aria-label={u.delete}><Trash2 {...ic} /></PendingLink>}
                   </ActionsTd>
                 )}
               </tr>
@@ -126,14 +114,6 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
           </tbody>
         </Table>
       )}
-
-      <div className="mt-6 flex items-center justify-between gap-2 text-sm">
-        <span className="text-d-muted">{u.total}: {fmtNum(total)}</span>
-        <span className="flex gap-2">
-          {page > 1 && <Link href={pageHref(page - 1)} className={pager}>{u.prev}</Link>}
-          {page * PAGE < total && <Link href={pageHref(page + 1)} className={pager}>{u.next}</Link>}
-        </span>
-      </div>
 
       {canManage && modal === "user-new" && (
         <Modal title={u.new} closeHref={here} closeLabel={t.catalog.close}>
@@ -143,7 +123,7 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
             <Field label={u.email}><input name="email" type="email" required dir="ltr" maxLength={200} className={input} /></Field>
             <Field label={u.password}><input name="password" type="text" required minLength={8} maxLength={72} dir="ltr" autoComplete="off" className={input} /></Field>
             <p className="text-xs text-d-muted">{u.passwordHint}</p>
-            <button type="submit" className={btnLime}>{u.create}</button>
+            <SubmitButton className={btnLime}>{u.create}</SubmitButton>
           </form>
         </Modal>
       )}
@@ -156,7 +136,7 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
             <input type="hidden" name="old_email" value={row.email ?? ""} />
             <Field label={u.name}><input name="name" required maxLength={80} defaultValue={row.full_name} className={input} /></Field>
             <Field label={u.email}><input name="email" type="email" required dir="ltr" maxLength={200} defaultValue={row.email ?? ""} className={input} /></Field>
-            <button type="submit" className={btnLime}>{t.catalog.save}</button>
+            <SubmitButton className={btnLime}>{t.catalog.save}</SubmitButton>
           </form>
         </Modal>
       )}
@@ -173,7 +153,7 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
               </select>
             </Field>
             <Field label={t.user.planExpires}><input name="expires" type="date" dir="ltr" className={input} /></Field>
-            <button type="submit" className={btnLime}>{t.catalog.save}</button>
+            <SubmitButton className={btnLime}>{t.catalog.save}</SubmitButton>
           </form>
         </Modal>
       )}
@@ -184,7 +164,7 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
             <input type="hidden" name="here" value={`${PATH}?tab=admins`} />
             <input type="hidden" name="id" value={row.id} />
             <RoleFields t={t} />
-            <button type="submit" className={btnLime}>{u.makeAdmin}</button>
+            <SubmitButton className={btnLime}>{u.makeAdmin}</SubmitButton>
           </form>
         </Modal>
       )}
@@ -197,8 +177,8 @@ export async function UsersTab({ sp, role, me, t, lang, supabase }: {
             <p className="rounded-2xl bg-d-blush px-4 py-3 text-sm leading-6 text-d-danger">{u.deleteWarn}</p>
             <Field label={`${u.deleteType}: ${row.email}`}><input name="confirm" required dir="ltr" autoComplete="off" className={input} /></Field>
             <div className="flex gap-3">
-              <button type="submit" className="h-12 rounded-full bg-d-danger px-6 text-[15px] font-bold text-white">{u.deleteGo}</button>
-              <Link href={here} className={btnSmall}>{t.catalog.cancel}</Link>
+              <SubmitButton className="h-12 rounded-full bg-d-danger px-6 text-[15px] font-bold text-white">{u.deleteGo}</SubmitButton>
+              <PendingLink href={here} spinner={false} className={btnSmall}>{t.catalog.cancel}</PendingLink>
             </div>
           </form>
         </Modal>

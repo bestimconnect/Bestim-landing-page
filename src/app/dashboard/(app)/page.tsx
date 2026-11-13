@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { PendingLink } from "@/dashboard/Pending";
 import { fmtNum, fmtToday, getDash } from "@/dashboard/i18n";
 import { requireAdmin } from "@/dashboard/session";
 import type { Overview } from "@/dashboard/types";
@@ -42,12 +42,12 @@ export default async function OverviewPage() {
             {fmtNum(o.users_7d)} {t.overview.newWeek} · {fmtNum(o.users_30d)} {t.overview.newMonth}
           </p>
         </div>
-        <Link
+        <PendingLink
           href="/dashboard/users"
           className="relative inline-flex h-13 items-center rounded-full bg-lime px-7 text-base font-bold text-ink shadow-glow transition-transform hover:-translate-y-0.5"
         >
           {t.overview.viewUsers}
-        </Link>
+        </PendingLink>
       </section>
 
       <div className="grid gap-5 md:grid-cols-3">

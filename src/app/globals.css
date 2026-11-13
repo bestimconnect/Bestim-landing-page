@@ -124,3 +124,16 @@ body {
   color: var(--d-ink);
   zoom: 0.8; /* the whole dashboard at 80% (founder, 2026-11-13) */
 }
+/* Thin loading bar at the top of the dashboard (Pending.tsx). Eases towards 85% and waits for the page. */
+@keyframes dash-topbar {
+  from { transform: scaleX(0.05); }
+  to { transform: scaleX(0.85); }
+}
+.dash-topbar {
+  transform-origin: left;
+  animation: dash-topbar 6s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
+}
+[dir="rtl"] .dash-topbar { transform-origin: right; }
+@media (prefers-reduced-motion: reduce) {
+  .dash-topbar { animation: none; transform: scaleX(0.6); }
+}

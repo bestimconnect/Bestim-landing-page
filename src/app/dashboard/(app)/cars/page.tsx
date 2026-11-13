@@ -1,11 +1,13 @@
 import { Search } from "lucide-react";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import { canEdit, link, one, type VType } from "@/dashboard/catalog";
 import { saveMake, saveModel } from "@/dashboard/catalog-actions";
 import { fmtNum, getDash } from "@/dashboard/i18n";
 import { Modal } from "@/dashboard/Modal";
+import { Pager, pageOf, sizeOf } from "@/dashboard/pager";
+import { PendingLink } from "@/dashboard/Pending";
 import { requireAdmin } from "@/dashboard/session";
-import { btnLime, btnSmall, CatalogForm, Chip, Field, input, PageTitle, Pic, PicField, Switch, Table, td, th, VisibleBox } from "@/dashboard/ui";
+import { btnLime, btnSmall, CatalogForm, Chip, EmptyState, Field, input, PageTitle, Pic, PicField, Switch, Table, td, th, VisibleBox } from "@/dashboard/ui";
 
 type Make = { id: string; name_ar: string; name_en: string; is_active: boolean; logo_path: string | null; car_models: { count: number }[] };
 type Model = { id: string; make_id: string; name_ar: string; name_en: string; body_type: string; is_active: boolean; image_path: string | null };
@@ -20,6 +22,8 @@ export default async function CarsPage({ searchParams }: PageProps<"/dashboard/c
   const q = one(sp.q).trim().slice(0, 60);
   const modal = one(sp.modal);
   const modalId = one(sp.id);
+  const page = pageOf(sp.page);
+  const size = sizeOf(sp.size);
 
   const [makesRes, typesRes] = await Promise.all([
     supabase.from("car_makes").select("id,name_ar,name_en,is_active,logo_path,car_models(count)").order("sort").order("name_en"),
@@ -34,14 +38,25 @@ export default async function CarsPage({ searchParams }: PageProps<"/dashboard/c
   const shown = q ? makes.filter((m) => `${m.name_ar} ${m.name_en}`.toLowerCase().includes(q.toLowerCase())) : makes;
   const requested = one(sp.brand);
   const brand = makes.find((m) => m.id === requested) ?? shown[0] ?? makes[0];
-  const { data: modelRows } = brand
-    ? await supabase.from("car_models").select("id,make_id,name_ar,name_en,body_type,is_active,image_path").eq("make_id", brand.id).order("name_en")
-    : { data: [] };
+  const { data: modelRows, count: modelCount } = brand
+    ? await supabase
+        .from("car_models")
+        .select("id,make_id,name_ar,name_en,body_type,is_active,image_path", { count: "exact" })
+        .eq("make_id", brand.id)
+        .order("name_en")
+        .range((page - 1) * size, page * size - 1)
+    : { data: [], count: 0 };
   const models = (modelRows ?? []) as Model[];
+  const total = modelCount ?? 0;
+  // A page past the end (old link, deleted rows): go to the last one.
+  if (brand && models.length === 0 && total > 0 && page > 1) {
+    redirect(link(PATH, { brand: brand.id, q, page: String(Math.ceil(total / size)) }));
+  }
   const totalModels = makes.reduce((n, m) => n + (m.car_models[0]?.count ?? 0), 0);
   const nm = (x: { name_ar: string; name_en: string }) => (lang === "ar" ? x.name_ar : x.name_en);
 
-  const list = link(PATH, { brand: brand?.id, q });
+  const pg = page > 1 ? String(page) : undefined;
+  const list = link(PATH, { brand: brand?.id, q, page: pg });
   const close = list;
   const model = modal === "model-edit" ? models.find((m) => m.id === modalId) : undefined;
   const editBrand = modal === "brand-edit" ? makes.find((m) => m.id === modalId) : undefined;
@@ -52,9 +67,9 @@ export default async function CarsPage({ searchParams }: PageProps<"/dashboard/c
       <div className="flex flex-wrap items-start justify-between gap-x-4">
         <PageTitle sub={`${fmtNum(makes.length)} ${t.cars.brands} · ${fmtNum(totalModels)} ${t.cars.models}`}>{t.cars.title}</PageTitle>
         {edit && (
-          <Link href={link(PATH, { modal: "brand-new", brand: brand?.id, q })} className={`${btnLime} mb-6 inline-flex items-center`}>
+          <PendingLink href={link(PATH, { modal: "brand-new", brand: brand?.id, q })} className={`${btnLime} mb-6 inline-flex items-center`}>
             {t.cars.newBrand}
-          </Link>
+          </PendingLink>
         )}
       </div>
 
@@ -69,8 +84,9 @@ export default async function CarsPage({ searchParams }: PageProps<"/dashboard/c
           <div className="flex max-h-[34rem] flex-col gap-1 overflow-y-auto">
             {shown.length === 0 && <p className="p-3 text-sm text-d-muted">{t.cars.noBrands}</p>}
             {shown.map((m) => (
-              <Link
+              <PendingLink
                 key={m.id}
+                spinner={false}
                 href={link(PATH, { brand: m.id, q })}
                 aria-current={m.id === brand?.id ? "true" : undefined}
                 className={`flex items-center gap-3 rounded-2xl px-3 py-2.5 ${m.id === brand?.id ? "bg-d-mint" : ""} ${m.is_active ? "" : "opacity-55"}`}
@@ -83,7 +99,7 @@ export default async function CarsPage({ searchParams }: PageProps<"/dashboard/c
                   <span className="block truncate text-xs text-d-muted" dir="ltr">{m.name_en}</span>
                 </span>
                 <span className="text-[13px] text-d-muted">{fmtNum(m.car_models[0]?.count ?? 0)}</span>
-              </Link>
+              </PendingLink>
             ))}
           </div>
         </section>
@@ -92,19 +108,19 @@ export default async function CarsPage({ searchParams }: PageProps<"/dashboard/c
           <div className="min-w-0">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <h2 className="text-lg font-extrabold">
-                {nm(brand)} <span className="text-sm font-medium text-d-muted">{fmtNum(models.length)} {t.cars.modelsCount}</span>
+                {nm(brand)} <span className="text-sm font-medium text-d-muted">{fmtNum(total)} {t.cars.modelsCount}</span>
               </h2>
               {edit && (
                 <div className="flex gap-2">
-                  <Link href={link(PATH, { modal: "brand-edit", id: brand.id, brand: brand.id, q })} className={btnSmall}>{t.cars.editBrand}</Link>
-                  <Link href={link(PATH, { modal: "model-new", brand: brand.id, q })} className={btnSmall}>{t.cars.newModel}</Link>
+                  <PendingLink href={link(PATH, { modal: "brand-edit", id: brand.id, brand: brand.id, q })} className={btnSmall}>{t.cars.editBrand}</PendingLink>
+                  <PendingLink href={link(PATH, { modal: "model-new", brand: brand.id, q, page: pg })} className={btnSmall}>{t.cars.newModel}</PendingLink>
                 </div>
               )}
             </div>
             {models.length === 0 ? (
-              <p className="text-d-muted">{t.cars.noModels}</p>
+              <EmptyState>{t.cars.noModels}</EmptyState>
             ) : (
-              <Table>
+              <Table footer={<Pager size={size} page={page} total={total} base={PATH} params={{ brand: brand.id, q }} />}>
                 <thead>
                   <tr>{[t.cars.model, t.cars.bodyType, t.cars.picture, t.cars.shown, ""].map((h, i) => <th key={i} className={th}>{h}</th>)}</tr>
                 </thead>
@@ -129,7 +145,7 @@ export default async function CarsPage({ searchParams }: PageProps<"/dashboard/c
                         <td className={td}><Chip tone={own ? "amber" : "paper"}>{own ? t.cars.ownPic : t.cars.typePic}</Chip></td>
                         <td className={td}><Switch table="car_models" id={m.id} on={m.is_active} back={list} label={t.catalog.visible} edit={edit} /></td>
                         <td className={td}>
-                          <Link href={link(PATH, { modal: "model-edit", id: m.id, brand: brand.id, q })} className={btnSmall}>{edit ? t.catalog.edit : t.catalog.view}</Link>
+                          <PendingLink href={link(PATH, { modal: "model-edit", id: m.id, brand: brand.id, q, page: pg })} className={btnSmall}>{edit ? t.catalog.edit : t.catalog.view}</PendingLink>
                         </td>
                       </tr>
                     );
@@ -139,7 +155,7 @@ export default async function CarsPage({ searchParams }: PageProps<"/dashboard/c
             )}
           </div>
         ) : (
-          <p className="text-d-muted">{t.cars.noBrands}</p>
+          <EmptyState>{t.cars.noBrands}</EmptyState>
         )}
       </div>
 
@@ -169,7 +185,7 @@ export default async function CarsPage({ searchParams }: PageProps<"/dashboard/c
           <CatalogForm
             action={saveModel}
             list={close}
-            here={model ? link(PATH, { modal: "model-edit", id: model.id, brand: brand?.id, q }) : link(PATH, { modal: "model-new", brand: brand?.id, q })}
+            here={model ? link(PATH, { modal: "model-edit", id: model.id, brand: brand?.id, q, page: pg }) : link(PATH, { modal: "model-new", brand: brand?.id, q, page: pg })}
             id={model?.id}
             edit={edit}
             err={err}

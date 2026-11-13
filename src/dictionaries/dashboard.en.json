@@ -15,7 +15,8 @@
     "collapse": "Collapse menu",
     "expand": "Expand menu",
     "plans": "Plans",
-    "pages": "Pages"
+    "pages": "Pages",
+    "ai": "AI costs"
   },
   "login": {
     "title": "Welcome to the Bestim dashboard",
@@ -632,5 +633,62 @@
         "Attach a screenshot"
       ]
     }
+  },
+  "ai": {
+    "title": "AI costs",
+    "sub": "Gemini usage and spend",
+    "info": "Live numbers from our own log: every voice and camera call with its tokens, turned into dollars with the prices in Settings. Google's real bill (a day behind) comes next.",
+    "saved": "Saved.",
+    "settingsBtn": "Settings",
+    "budgetTitle": "Monthly budget",
+    "spent": "Spent this month",
+    "left": "Left",
+    "of": "of",
+    "noBudget": "No budget yet. The owner sets one in Settings.",
+    "warn80": "80% of the monthly budget is used.",
+    "over": "The monthly budget is used up. Calls are not blocked.",
+    "ok": "Within budget",
+    "voice": "Voice calls",
+    "scans": "Camera scans",
+    "failed": "Failed",
+    "perCall": "Average per call",
+    "daily": "Spend per day (this month and last)",
+    "noData": "No AI calls yet.",
+    "topUsers": "Top users this month",
+    "colUser": "User",
+    "colVoice": "Voice",
+    "colScan": "Scans",
+    "colCost": "Cost",
+    "pay": "Pay Google",
+    "payHint": "Opens Google Cloud Billing in a new tab. You pay on Google's page; this dashboard never sees your card.",
+    "payMissing": "Add the billing account id in Settings to turn on the Pay button.",
+    "estimate": "Estimates use the prices in Settings. Calls from before token logging count at a fixed average.",
+    "settings": {
+      "title": "AI settings",
+      "budget": "Monthly budget (USD)",
+      "billing": "Google billing account id",
+      "billingHint": "Looks like 01A2B3-C4D5E6-F7A8B9. Find it in Google Cloud under Billing.",
+      "prices": "Price per million tokens (USD)",
+      "pInput": "Text and image input",
+      "pAudio": "Audio input",
+      "pOutput": "Output and thinking",
+      "priceHint": "Copy these from Google's Gemini price page. The starting values are placeholders.",
+      "save": "Save",
+      "cancel": "Cancel",
+      "ownerOnly": "Only the owner can change these."
+    },
+    "err": {
+      "forbidden": "Only the owner can change these settings.",
+      "number": "Enter plain numbers (prices up to 4 decimals, budget up to 2).",
+      "billing": "The billing account id looks like 01A2B3-C4D5E6-F7A8B9.",
+      "save": "We couldn't save right now. Try again."
+    }
+  },
+  "pager": {
+    "label": "Pages",
+    "showing": "Showing {from}-{to} of {total}",
+    "prev": "Previous",
+    "next": "Next",
+    "perPage": "Rows"
   }
 }

@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { TopBar } from "@/dashboard/Pending";
 import { Shell } from "@/dashboard/Shell";
 import { requireAdmin } from "@/dashboard/session";
 
@@ -6,6 +8,7 @@ export default async function AppLayout({ children }: LayoutProps<"/dashboard">)
   const { email, role } = await requireAdmin();
   return (
     <Shell email={email} role={role}>
+      <Suspense fallback={null}><TopBar /></Suspense>
       {children}
     </Shell>
   );
