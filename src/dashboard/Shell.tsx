@@ -1,4 +1,4 @@
-import { Activity, Bug, Car, FileText, Languages, Layers, LayoutDashboard, List, ListChecks, LogOut, Mail, Plug, Sparkles, Users, WalletCards, Wrench } from "lucide-react";
+import { Activity, Bell, Bug, Car, FileText, Languages, Layers, LayoutDashboard, List, ListChecks, LogOut, Mail, Plug, Sparkles, Users, WalletCards, Wrench } from "lucide-react";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import type { ReactNode } from "react";
@@ -23,6 +23,7 @@ export async function Shell({ email, role, children }: { email: string; role: st
     { href: "/dashboard/logs", label: t.nav.logs, icon: <List {...icon} /> },
     { href: "/dashboard/plans", label: t.nav.plans, icon: <WalletCards {...icon} /> },
     { href: "/dashboard/ai", label: t.nav.ai, icon: <Sparkles {...icon} /> },
+    { href: "/dashboard/notifications", label: t.nav.notifications, icon: <Bell {...icon} /> },
     { heading: t.nav.content },
     { href: "/dashboard/cars", label: t.nav.cars, icon: <Car {...icon} /> },
     { href: "/dashboard/parts", label: t.nav.parts, icon: <Wrench {...icon} /> },

@@ -16,7 +16,8 @@
     "expand": "Expand menu",
     "plans": "Plans",
     "pages": "Pages",
-    "ai": "AI costs"
+    "ai": "AI costs",
+    "notifications": "Notifications"
   },
   "login": {
     "title": "Welcome to the Bestim dashboard",
@@ -690,5 +691,41 @@
     "prev": "Previous",
     "next": "Next",
     "perPage": "Rows"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "sub": "Send a message to every user or to chosen users. It also shows inside the app.",
+    "history": "Sent messages",
+    "empty": "Nothing sent yet",
+    "sentSummary": "Sent. Reached {sent} phones, {failed} failed.",
+    "col": {
+      "date": "Date",
+      "title": "Title",
+      "audience": "To",
+      "recipients": "Count",
+      "pushed": "Push"
+    },
+    "err": {
+      "forbidden": "You can't send messages.",
+      "noKey": "The server key isn't set.",
+      "invalid": "Check the title and text (Arabic is required).",
+      "noRecipients": "Pick at least one user (500 at most).",
+      "confirm": "Confirm you want to send to everyone.",
+      "save": "We couldn't send it. Try again."
+    },
+    "form": {
+      "title_ar": "Title (Arabic)",
+      "body_ar": "Message (Arabic)",
+      "title_en": "Title (English)",
+      "body_en": "Message (English)",
+      "hintEn": "English is optional: when empty, English-language users see the Arabic text.",
+      "audience": "Send to",
+      "all": "All users",
+      "selected": "Selected users",
+      "search": "Search by name or email",
+      "none": "No one picked yet",
+      "confirm": "I'm sure: this goes to every user ({n}) and can't be taken back.",
+      "send": "Send"
+    }
   }
 }
