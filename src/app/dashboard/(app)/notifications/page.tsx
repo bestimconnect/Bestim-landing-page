@@ -1,3 +1,4 @@
+import { DeliveryCheck } from "@/dashboard/DeliveryCheck";
 import { ComposeForm } from "@/dashboard/ComposeForm";
 import { fmtDate, fmtNum, getDash } from "@/dashboard/i18n";
 import { requireAdmin } from "@/dashboard/session";
@@ -39,6 +40,7 @@ export default async function NotificationsPage({ searchParams }: { searchParams
               <th className={th}>{n.col.audience}</th>
               <th className={th}>{n.col.recipients}</th>
               <th className={th}>{n.col.pushed}</th>
+              <th className={th} />
             </tr>
           </thead>
           <tbody>
@@ -49,6 +51,7 @@ export default async function NotificationsPage({ searchParams }: { searchParams
                 <td className={td}><Chip tone={r.audience === "all" ? "amber" : "sky"}>{r.audience === "all" ? n.form.all : n.form.selected}</Chip></td>
                 <td className={td}>{fmtNum(r.recipients)}</td>
                 <td className={td}>{fmtNum(r.push_sent)}{r.push_failed ? ` / ${fmtNum(r.push_failed)} ✗` : ""}</td>
+                <td className={td}>{r.push_sent > 0 && <DeliveryCheck id={r.id} l={n.form} />}</td>
               </tr>
             ))}
           </tbody>

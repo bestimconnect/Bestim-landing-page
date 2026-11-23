@@ -711,7 +711,8 @@
       "invalid": "Check the title and text (Arabic is required).",
       "noRecipients": "Pick at least one user (500 at most).",
       "confirm": "Confirm you want to send to everyone.",
-      "save": "We couldn't send it. Try again."
+      "save": "We couldn't send it. Try again.",
+      "badLink": "The link must start with https://"
     },
     "form": {
       "title_ar": "Title (Arabic)",
@@ -723,9 +724,26 @@
       "all": "All users",
       "selected": "Selected users",
       "search": "Search by name or email",
-      "none": "No one picked yet",
+      "none": "Info only",
       "confirm": "I'm sure: this goes to every user ({n}) and can't be taken back.",
-      "send": "Send"
+      "send": "Send",
+      "tap": "When the user taps it",
+      "screen": "Opens a page in the app",
+      "link": "Opens an external link",
+      "linkPh": "https://",
+      "screens": {
+        "home": "Home",
+        "services": "Services",
+        "money": "Money",
+        "garage": "Garage",
+        "notifications": "Notifications",
+        "upgrade": "Upgrade"
+      },
+      "check": "Check delivery",
+      "delivered": "Delivered {n}",
+      "failedN": "Failed {n}",
+      "waiting": "Waiting {n}",
+      "reason": "Reason"
     }
   }
 }
