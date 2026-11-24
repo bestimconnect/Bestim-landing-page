@@ -77,14 +77,28 @@ export async function sendPush(f: FormData) {
 
   // Phones to notify: everyone's (or the chosen users') tokens, minus people who turned notifications off.
   const tokens: { token: string; lang: string }[] = [];
+  // Two plain queries instead of a joined one: a join problem used to look exactly like "no phones" (Push 0, no error).
+  const rows: { token: string; user_id: string }[] = [];
   for (let from = 0; ; from += 1000) {
-    let q = service.from("push_tokens").select("token, profiles!inner(language, notifications_enabled)").eq("profiles.notifications_enabled", true).order("id").range(from, from + 999);
+    let q = service.from("push_tokens").select("token, user_id").order("id").range(from, from + 999);
     if (audience === "selected") q = q.in("user_id", ids);
-    const { data } = await q;
-    const rows = (data ?? []) as unknown as { token: string; profiles: { language: string } | { language: string }[] }[];
-    for (const r of rows) tokens.push({ token: r.token, lang: (Array.isArray(r.profiles) ? r.profiles[0] : r.profiles)?.language === "en" ? "en" : "ar" });
-    if (rows.length < 1000) break;
+    const { data, error } = await q;
+    if (error) go("err=tokens");
+    rows.push(...(data ?? []));
+    if ((data ?? []).length < 1000) break;
   }
+  const userIds = [...new Set(rows.map((r) => r.user_id))];
+  const prefs = new Map<string, { language: string; notifications_enabled: boolean }>();
+  for (let i = 0; i < userIds.length; i += 200) {
+    const { data, error } = await service.from("profiles").select("id, language, notifications_enabled").in("id", userIds.slice(i, i + 200));
+    if (error) go("err=tokens");
+    for (const p of data ?? []) prefs.set(p.id as string, p as { language: string; notifications_enabled: boolean });
+  }
+  for (const r of rows) {
+    const pr = prefs.get(r.user_id);
+    if (pr?.notifications_enabled) tokens.push({ token: r.token, lang: pr.language === "en" ? "en" : "ar" });
+  }
+  if (tokens.length === 0) go("err=noPhones"); // saved in the app's bell, but no phone to push to
 
   let sent = 0;
   let failed = 0;
