@@ -712,7 +712,9 @@
       "noRecipients": "Pick at least one user (500 at most).",
       "confirm": "Confirm you want to send to everyone.",
       "save": "We couldn't send it. Try again.",
-      "badLink": "The link must start with https://"
+      "badLink": "The link must start with https://",
+      "tokens": "Couldn't look up the phones. Try again.",
+      "noPhones": "Saved in the app, but no phone is registered for push (or notifications are off)."
     },
     "form": {
       "title_ar": "Title (Arabic)",
