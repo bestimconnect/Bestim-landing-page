@@ -746,6 +746,7 @@
       "failedN": "Failed {n}",
       "waiting": "Waiting {n}",
       "reason": "Reason"
-    }
+    },
+    "resend": "Resend"
   }
 }
