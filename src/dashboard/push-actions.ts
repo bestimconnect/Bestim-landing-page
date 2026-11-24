@@ -15,7 +15,7 @@ const EXPO = "https://exp.host/--/api/v2/push/send";
 const RECEIPTS = "https://exp.host/--/api/v2/push/getReceipts";
 const MAX_SELECTED = 500;
 // Screens an admin may open from a notification (path inside the app). A fixed list so a typo can never open a broken screen.
-export const SCREENS: Record<string, string> = { home: "/", services: "/services", money: "/expenses", garage: "/garage", notifications: "/notifications", upgrade: "/upgrade" };
+const SCREENS: Record<string, string> = { home: "/", services: "/services", money: "/expenses", garage: "/garage", notifications: "/notifications", upgrade: "/upgrade" };
 const str = (f: FormData, k: string) => String(f.get(k) ?? "").trim();
 const expoHeaders = () => ({ "Content-Type": "application/json", Accept: "application/json", ...(process.env.EXPO_ACCESS_TOKEN ? { Authorization: `Bearer ${process.env.EXPO_ACCESS_TOKEN}` } : {}) });
 const go = (qs: string): never => redirect(`${HERE}?${qs}`);
