@@ -9,14 +9,15 @@ import { btnLime, Field, input } from "./ui";
 type Picked = { id: string; name: string; email: string };
 type Labels = Record<"title_ar" | "body_ar" | "title_en" | "body_en" | "audience" | "all" | "selected" | "search" | "none" | "confirm" | "send" | "hintEn" | "tap" | "screen" | "link" | "linkPh", string> & { screens: Record<string, string> };
 type Tap = "none" | "screen" | "link";
+export type Prefill = { title_ar: string; body_ar: string; title_en: string; body_en: string; action: Tap; screen: string; link: string; audience: "all" | "selected"; picked: Picked[] };
 
 // The compose form: Arabic text (required), English text (optional), everyone or chosen users. Chosen users are looked up by
 // name or email and kept as tags (hidden inputs named "user"). Sending to everyone needs the box that shows the user count.
-export function ComposeForm({ l, total }: { l: Labels; total: number }) {
-  const [audience, setAudience] = useState<"all" | "selected">("selected"); // starts on the safe choice
-  const [picked, setPicked] = useState<Picked[]>([]);
+export function ComposeForm({ l, total, from }: { l: Labels; total: number; from?: Prefill }) {
+  const [audience, setAudience] = useState<"all" | "selected">(from?.audience ?? "selected"); // starts on the safe choice
+  const [picked, setPicked] = useState<Picked[]>(from?.picked ?? []);
   const [hits, setHits] = useState<Picked[]>([]);
-  const [tap, setTap] = useState<Tap>("none");
+  const [tap, setTap] = useState<Tap>(from?.action ?? "none");
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const search = (q: string) => {
     clearTimeout(timer.current);
@@ -24,12 +25,12 @@ export function ComposeForm({ l, total }: { l: Labels; total: number }) {
     timer.current = setTimeout(async () => setHits(await searchUsers(q)), 250);
   };
   return (
-    <form action={sendPush} className="grid max-w-2xl gap-4">
-      <Field label={l.title_ar}><input name="title_ar" required maxLength={100} dir="rtl" className={input} /></Field>
-      <Field label={l.body_ar}><textarea name="body_ar" required maxLength={500} rows={3} dir="rtl" className={`${input} h-auto py-3`} /></Field>
+    <form id="compose" action={sendPush} className="grid max-w-2xl gap-4">
+      <Field label={l.title_ar}><input name="title_ar" defaultValue={from?.title_ar} required maxLength={100} dir="rtl" className={input} /></Field>
+      <Field label={l.body_ar}><textarea name="body_ar" defaultValue={from?.body_ar} required maxLength={500} rows={3} dir="rtl" className={`${input} h-auto py-3`} /></Field>
       <p className="-mb-2 text-[13px] text-d-muted">{l.hintEn}</p>
-      <Field label={l.title_en}><input name="title_en" maxLength={100} dir="ltr" className={input} /></Field>
-      <Field label={l.body_en}><textarea name="body_en" maxLength={500} rows={3} dir="ltr" className={`${input} h-auto py-3`} /></Field>
+      <Field label={l.title_en}><input name="title_en" defaultValue={from?.title_en} maxLength={100} dir="ltr" className={input} /></Field>
+      <Field label={l.body_en}><textarea name="body_en" defaultValue={from?.body_en} maxLength={500} rows={3} dir="ltr" className={`${input} h-auto py-3`} /></Field>
 
       <fieldset className="grid gap-3 rounded-3xl border border-d-line p-4">
         <legend className="px-2 text-[13px] font-semibold">{l.tap}</legend>
@@ -42,12 +43,12 @@ export function ComposeForm({ l, total }: { l: Labels; total: number }) {
           ))}
         </div>
         {tap === "screen" && (
-          <select name="screen" required className={input} defaultValue="">
+          <select name="screen" required className={input} defaultValue={from?.screen ?? ""}>
             <option value="" disabled>—</option>
             {Object.entries(l.screens).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
           </select>
         )}
-        {tap === "link" && <input name="link" type="url" required maxLength={300} placeholder={l.linkPh} dir="ltr" pattern="https://.*" className={input} />}
+        {tap === "link" && <input name="link" type="url" defaultValue={from?.link} required maxLength={300} placeholder={l.linkPh} dir="ltr" pattern="https://.*" className={input} />}
       </fieldset>
 
       <fieldset className="grid gap-3 rounded-3xl border border-d-line p-4">
